@@ -179,9 +179,9 @@ export class HomeComponent {
 
           // Calculate Formula
           let answer = eval(x_formula);
-          console.log(x_formula + '=' + x_answer + '; ans= ' + answer);
+          console.log(x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6));
           this.result_form +=
-            x_formula + '=' + x_answer + '; ans= ' + answer + '\n';
+            x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6) + '\n';
 
           if (x == range.x.min) {
             near_x_lower = answer;
@@ -196,7 +196,7 @@ export class HomeComponent {
               near_x_upper_get = true;
             }
           }
-          
+
           if(answer == x_answer) {
             break;
           }
