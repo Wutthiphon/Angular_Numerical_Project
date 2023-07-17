@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
       {
         label: 'ข้อมูลพื้นฐาน',
         icon: 'pi pi-user',
-        routerLink: '/teacher/profile',
+        routerLink: '/',
         command: () => {
           // this.openPage();
         },
