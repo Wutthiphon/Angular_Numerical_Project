@@ -6,8 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
+  debug_mode: boolean = false;
   calc_form = {
-    input: '',
     formula: '',
   };
   isLoad_calc: boolean = false;
@@ -16,7 +16,7 @@ export class HomeComponent {
 
   calculate() {
     this.isLoad_calc = true;
-    const { input, formula } = this.calc_form;
+    const { formula } = this.calc_form;
 
     setTimeout(() => {
       this.isLoad_calc = false;
