@@ -16,7 +16,7 @@ export class HomeComponent {
     { label: 'Bisection', value: 'bisection' },
   ];
   calc_form: any = {
-    mode: 'bisection',
+    mode: 'find_x',
     formula: '',
     html_formula: '',
     convert_formula: '',
@@ -138,11 +138,12 @@ export class HomeComponent {
           let split_formula = replace_x.split('=');
           let x_formula = split_formula[0];
           let x_answer = split_formula[1];
-          // console.log(x_formula, '=', x_answer);
 
           // Calculate Formula
           let answer = eval(x_formula);
-          // console.log(answer);
+          console.log(x_formula + '=' + x_answer + '; ans= ' + answer);
+          this.result_form +=
+            x_formula + '=' + x_answer + '; ans= ' + answer + '\n';
 
           if (x == range.x.min) {
             near_x_lower = answer;
@@ -160,34 +161,53 @@ export class HomeComponent {
         }
         near_x_upper_get = false;
         console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
+        this.result_form +=
+          'Loop 1 Result: ' +
+          near_x_lower.toFixed(6) +
+          ' , ' +
+          near_x_upper.toFixed(6) +
+          '\n';
 
-        // for (let x = near_x_lower; x < near_x_upper; x = x + 0.000001) {
-        //   let replace_x = convert_formula.replace(
-        //     /x/g,
-        //     x.toFixed(6).toString()
-        //   );
-        //   let split_formula = replace_x.split('=');
-        //   let x_formula = split_formula[0];
-        //   let x_answer = split_formula[1];
-        //   console.log(x_formula, '=', x_answer);
-        //   // Calculate Formula
-        //   let answer = eval(x_formula);
-        //   console.log(answer);
-        //   if (x == range.x.min) {
-        //     near_x_lower = answer;
-        //     near_x_upper = x_answer;
-        //   }
-        //   if (answer < x_answer) {
-        //     if (answer > near_x_lower) near_x_lower = answer;
-        //   }
-        //   if (answer > x_answer) {
-        //     if (!near_x_upper_get) {
-        //       near_x_upper = answer;
-        //       near_x_upper_get = true;
-        //     }
-        //   }
-        // }
-        // console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
+        for (let x = near_x_lower; x < near_x_upper; x = x + 0.000001) {
+          let replace_x = convert_formula.replace(
+            /x/g,
+            x.toFixed(6).toString()
+          );
+          let split_formula = replace_x.split('=');
+          let x_formula = split_formula[0];
+          let x_answer = split_formula[1];
+
+          // Calculate Formula
+          let answer = eval(x_formula);
+          console.log(x_formula + '=' + x_answer + '; ans= ' + answer);
+          this.result_form +=
+            x_formula + '=' + x_answer + '; ans= ' + answer + '\n';
+
+          if (x == range.x.min) {
+            near_x_lower = answer;
+            near_x_upper = x_answer;
+          }
+          if (answer < x_answer) {
+            if (answer > near_x_lower) near_x_lower = answer;
+          }
+          if (answer > x_answer) {
+            if (!near_x_upper_get) {
+              near_x_upper = answer;
+              near_x_upper_get = true;
+            }
+          }
+          
+          if(answer == x_answer) {
+            break;
+          }
+        }
+        console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
+        this.result_form +=
+          'Loop 2 Result: ' +
+          near_x_lower.toFixed(6) +
+          ' , ' +
+          near_x_upper.toFixed(6) +
+          '\n';
       }
     }
 
