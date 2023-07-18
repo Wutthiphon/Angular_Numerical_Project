@@ -1,11 +1,11 @@
 <div class="grid">
   <div class="col-12 md:col-5">
-    <p-card header="การใส่ค่า และ สมการ" styleClass="h-full">
+    <p-card header="สมการและการแทนค่า" styleClass="h-full">
       <div class="grid">
         <!-- <div class="col-12">
           <b>วิธีการใช้ตัวดำเนินการ</b>
         </div> -->
-        <div class="col-12 flex align-content-center">
+        <div class="col-12 flex align-content-center mb-4">
           <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
           <b class="ml-2 mt-1">Debug Mode</b>
         </div>
@@ -19,15 +19,21 @@
           <input type="text" pInputText [(ngModel)]="calc_form.formula" name="calc_form_formula"
             #calc_form_formula="ngModel" placeholder="สมการ..." (input)="readFormula()" />
         </div>
+        <div class="col-12 mb-4">
+          <b>ฟังก์ชันเบื้องต้น</b>
+          <div class="row">
+            <p-button label="n√X" styleClass="p-button-sm" (onClick)="addFunctionFormula('n_root_x')"></p-button>
+          </div>
+        </div>
         <div class="col-12" *ngIf="debug_mode">
           <b>*อ่านสมการได้: </b>
           <label [innerHTML]="calc_form.html_formula" *ngIf="calc_form.html_formula != ''"></label>
-          <label *ngIf="calc_form.html_formula == ''">รอใส่สมการ</label>
+          <label *ngIf="calc_form.html_formula == ''">รอการใส่สมการ</label>
 
           <br>
-          <b>*โปรแกรมแทนสมการ: </b>
+          <b>*หลังแปลงสมการ: </b>
           <label [innerHTML]="calc_form.convert_formula" *ngIf="calc_form.convert_formula != ''"></label>
-          <label *ngIf="calc_form.convert_formula == ''">รอใส่สมการ</label>
+          <label *ngIf="calc_form.convert_formula == ''">รอการใส่สมการ</label>
         </div>
 
         <div class="col-12 flex align-content-center" *ngIf="calc_form.mode == 'find_x'">
@@ -37,47 +43,66 @@
           <b class="ml-2 mt-1">ทราบ X อยู่ในช่วง</b>
         </div>
         <div class="col-12" *ngIf="calc_form.mode == 'find_x' && calc_form.known.x">
-          <b>ช่วงของ X เริ่มจาก</b>
+          <b>X มากกว่า</b>
           <p-inputNumber [(ngModel)]="calc_form.range.x.min" mode="decimal" placeholder="ช่วงของ X..."
-            styleClass="w-full" [useGrouping]="false">
+            [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
           </p-inputNumber>
         </div>
         <div class="col-12" *ngIf="calc_form.mode == 'find_x' && calc_form.known.x">
-          <b>ถึง</b>
+          <b>น้อยกว่า</b>
           <p-inputNumber [(ngModel)]="calc_form.range.x.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
-            [useGrouping]="false">
+            [minFractionDigits]="2" [useGrouping]="false">
           </p-inputNumber>
         </div>
 
         <div class="col-12" *ngIf="calc_form.input_array.length > 0 && calc_form.mode == 'sample_var'">
           <b>แทนค่า: </b>
-          <table class="custom-table" border="1">
-            <tr>
-              <th style="width: 30%;">
-                ตัวแปร
-              </th>
-              <th>
-                แทนค่า
-              </th>
-            </tr>
-            <tr *ngFor="let _input of calc_form.input_array">
-              <td>
-                {{_input.label}}
-              </td>
-              <td>
-                <input type="text" pInputText [(ngModel)]="_input.value" placeholder="ค่า..." class="mt-1 mb-1" />
-              </td>
-            </tr>
-          </table>
+          <p-table [value]="calc_form.input_array">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ตัวแปร</th>
+                <th>การแทนค่า</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-f_input>
+              <tr>
+                <td>{{f_input.label}}</td>
+                <td>
+                  <input type="text" pInputText [(ngModel)]="f_input.value" placeholder="ค่า..."
+                    (input)="replacefomula()" name="f_input_value" #f_input_value="ngModel" class="mt-1 mb-1 w-full" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
 
-        <div class="col-12" *ngIf="calc_form.mode == 'bisection'">
+        <div class="col-12" *ngIf="calc_form.input_array.length > 0 && calc_form.mode == 'sample_var' && debug_mode">
+          <b>*แทนค่าสมการอ่านได้: </b>
+          <label [innerHTML]="calc_form.html_formula_replace" *ngIf="calc_form.html_formula_replace != ''"></label>
+          <label *ngIf="calc_form.html_formula_replace == ''">รอการแทนค่า</label>
+
+          <br>
+          <b>*หลังแทนค่าสมการ: </b>
+          <label [innerHTML]="calc_form.convert_formula_replace"
+            *ngIf="calc_form.convert_formula_replace != ''"></label>
+          <label *ngIf="calc_form.convert_formula_replace == ''">รอการแทนค่า</label>
+        </div>
+
+        <div class="col-12" *ngIf="calc_form.mode == 'sample_var'">
+          <b>Mode การหาคำตอบ: </b>
+          <p-dropdown [options]="sample_var_mode" [(ngModel)]="calc_form.sample_var_mode" optionLabel="label"
+            optionValue="value"></p-dropdown>
+        </div>
+
+        <div class="col-12"
+          *ngIf="calc_form.mode == 'bisection' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
           <b>ช่วงของ Root เริ่มจาก</b>
           <p-inputNumber [(ngModel)]="calc_form.range.root.min" mode="decimal" placeholder="ช่วงของ Root..."
             [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
           </p-inputNumber>
         </div>
-        <div class="col-12" *ngIf="calc_form.mode == 'bisection'">
+        <div class="col-12"
+          *ngIf="calc_form.mode == 'bisection' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
           <b>ถึง</b>
           <p-inputNumber [(ngModel)]="calc_form.range.root.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
             [minFractionDigits]="2" [useGrouping]="false">
@@ -96,10 +121,41 @@
       <div class="grid">
         <div class="col-12" *ngIf="debug_mode">
           <b>Logs:</b>
-          <textarea rows="10" pInputTextarea [disabled]="true">{{ result_form }}</textarea>
+          <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
+          <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
+            class="p-button-sm"></button>
+        </div>
+
+        <div class="col-12"
+          *ngIf="(calc_form.mode == 'bisection' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')) && result_answer.answer">
+          <b>ตารางการคำนวณ</b>
+          <p-table [value]="result_answer.bisection_table" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ครั้งที่</th>
+                <th>X<sub>l</sub></th>
+                <th>X<sub>r</sub></th>
+                <th>X<sub>m</sub></th>
+                <th>ปรับ</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-result>
+              <tr>
+                <td>{{ result.loop_count }}</td>
+                <td>{{ result.xl }}</td>
+                <td>{{ result.xr }}</td>
+                <td>{{ result.xm }}</td>
+                <td>{{ result.change }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
         <div class="col-12">
-          {{ result_answer || 'ไม่พบคำตอบ' }}
+          <b>คำตอบ:</b>
+          {{ result_answer.answer || 'ยังไม่มีการคำนวณ' }}
+          <br>
+          <b>จำนวนการ Loop:</b>
+          {{ result_answer.total_loop + ' ครั้ง' || 'ยังไม่มีการ Loop' }}
         </div>
       </div>
     </p-card>

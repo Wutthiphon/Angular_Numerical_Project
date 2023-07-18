@@ -7,29 +7,40 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  debug_mode: boolean = true;
+  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_mode = [
-    { label: 'หา X', value: 'find_x' },
-    { label: 'ทดลองแทนค่า', value: 'sample_var' },
-    { label: 'Bisection', value: 'bisection' },
+    { label: 'หาค่า X', value: 'find_x' },
+    { label: 'ทดสอบแทนค่าสมการ', value: 'sample_var' },
+    { label: 'Bisection Iteration', value: 'bisection' },
   ];
   calc_form: any = {
-    mode: 'find_x',
+    mode: 'sample_var',
     formula: '',
     html_formula: '',
     convert_formula: '',
+    html_formula_replace: '',
+    convert_formula_replace: '',
     known: { x: true },
     range: {
       x: { min: 0, max: 10 },
       root: { min: 0.02, max: 0.03 },
     },
     input_array: [],
+    sample_var_mode: 'bisection',
   };
+  sample_var_mode = [
+    { label: 'ปกติ (แทนค่าทั้งหมดเพื่อหาคำตอบ)', value: 'normal' },
+    { label: 'Bisection Iteration', value: 'bisection' },
+  ];
 
-  result_form: string = '';
-  result_answer: number = 0;
+  result_logs: string = '';
+  result_answer = {
+    answer: '',
+    bisection_table: Array<any>(),
+    total_loop: 0,
+  };
 
   constructor(private messageService: MessageService) {}
 
@@ -60,6 +71,12 @@ export class HomeComponent {
       }
     }
 
+    // If formula have sqrt replace to Math.sqrt
+    if (formula.includes('sqrt')) {
+      html_formula = formula.replace(/sqrt/g, '√');
+      convert_formula = formula.replace(/sqrt/g, 'Math.sqrt');
+    }
+
     formula.split('').forEach((element: any, index: number) => {
       //  If Mode == "ทดลองแทนค่า"
       if (mode == 'sample_var') {
@@ -80,25 +97,130 @@ export class HomeComponent {
           convert_formula = convert_formula.replace(/x/g, '*x');
         }
       }
-
-      // If Mode == "Bisection"
-      //   if (mode == 'bisection') {
-      //     // html_formula += element;
-      //     // convert_formula += element;
-      //   }
     });
 
     this.calc_form.html_formula = html_formula;
     this.calc_form.convert_formula = convert_formula;
   }
 
+  replacefomula() {
+    let html_formula_replace = this.calc_form.html_formula;
+    let convert_formula_replace = this.calc_form.convert_formula;
+
+    this.calc_form.input_array.forEach((element: any) => {
+      const regex = new RegExp('\\b' + element.label + '\\b', 'g'); //replace only word
+      html_formula_replace = html_formula_replace.replace(regex, element.value);
+      convert_formula_replace = convert_formula_replace.replace(
+        regex,
+        element.value
+      );
+    });
+
+    this.calc_form.html_formula_replace = html_formula_replace;
+    this.calc_form.convert_formula_replace = convert_formula_replace;
+  }
+
   calculate() {
     let error: number = 0;
     this.isLoad_calc = true;
-    const { convert_formula, mode, range } = this.calc_form;
+    const {
+      convert_formula,
+      convert_formula_replace,
+      mode,
+      range,
+      sample_var_mode,
+    } = this.calc_form;
+    this.result_answer.answer = '';
+    this.result_answer.bisection_table = [];
+    this.result_answer.total_loop = 0;
 
     setTimeout(() => {
       if (mode == 'sample_var') {
+        if (sample_var_mode == 'normal') {
+          let answer = eval(convert_formula_replace);
+
+          this.result_logs +=
+            'formula : ' +
+            convert_formula +
+            '| replace : ' +
+            convert_formula_replace +
+            '\n';
+          this.result_logs += 'answer :' + answer.toFixed(6).toString() + '\n';
+
+          this.result_answer.answer = answer.toFixed(6).toString();
+        } else if (sample_var_mode == 'bisection') {
+          let last_answer: number = 0;
+
+          // Check range of x have min and max
+          if (range.root.min == null || range.root.max == null) {
+            error++;
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'กรุณาใส่ช่วงของ X',
+            });
+          }
+
+          // if error == 0 do fomula
+          if (error == 0) {
+            this.result_logs +=
+              'f(x) = ' + convert_formula_replace + '=0' + '\n';
+            this.result_logs += `---------------------------------` + '\n';
+
+            let a: number = range.root.min;
+            let b: number = range.root.max;
+
+            let i = 0;
+            while (true) {
+              let mid = (a + b) / 2;
+
+              if (last_answer == Number(mid.toFixed(6))) {
+                this.result_answer.answer = mid.toFixed(6);
+                break;
+              } else {
+                last_answer = Number(mid.toFixed(6));
+                i++;
+              }
+
+              this.result_logs +=
+                `Iteration Loop ${i}: mid = ${a.toFixed(6)} + ${b.toFixed(
+                  6
+                )} / 2` + '\n';
+              this.result_logs += `Iteration Result: ${mid.toFixed(6)}` + '\n';
+
+              let f_x_test = convert_formula_replace.replace(
+                /x/g,
+                mid.toFixed(6).toString()
+              );
+              this.result_logs +=
+                'f(x) = ' + Number(eval(f_x_test)).toFixed(6).toString() + '\n';
+              this.result_logs += `---------------------------------` + '\n';
+
+              let change = '';
+              if (
+                this.f_function(a, convert_formula_replace) *
+                  this.f_function(mid, convert_formula_replace) <
+                0
+              ) {
+                b = mid;
+                change = 'L ';
+              } else {
+                a = mid;
+                change = 'R ';
+              }
+
+              this.result_answer.bisection_table.push({
+                loop_count: i,
+                xl: a.toFixed(6),
+                xr: b.toFixed(6),
+                xm: mid.toFixed(6),
+                change: change,
+              });
+
+              this.result_answer.total_loop++;
+            }
+          }
+        }
       }
 
       if (mode == 'find_x') {
@@ -148,7 +270,7 @@ export class HomeComponent {
             // Calculate Formula
             let answer = eval(x_formula);
             console.log(x_formula + '=' + x_answer + '; ans= ' + answer);
-            this.result_form +=
+            this.result_logs +=
               x_formula + '=' + x_answer + '; ans= ' + answer + '\n';
 
             if (x == range.x.min) {
@@ -167,7 +289,7 @@ export class HomeComponent {
           }
           near_x_upper_get = false;
           console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
-          this.result_form +=
+          this.result_logs +=
             'Loop 1 Result: ' +
             near_x_lower.toFixed(6) +
             ' , ' +
@@ -188,7 +310,7 @@ export class HomeComponent {
             console.log(
               x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6)
             );
-            this.result_form +=
+            this.result_logs +=
               x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6) + '\n';
 
             if (x == range.x.min) {
@@ -210,7 +332,7 @@ export class HomeComponent {
             }
           }
           console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
-          this.result_form +=
+          this.result_logs +=
             'Loop 2 Result: ' +
             near_x_lower.toFixed(6) +
             ' , ' +
@@ -231,20 +353,11 @@ export class HomeComponent {
             detail: 'กรุณาใส่ช่วงของ X',
           });
         }
-        // Check Have Alphabet in formula
-        // if (convert_formula.match(/[a-z]/i)) {
-        //   error++;
-        //   this.messageService.add({
-        //     severity: 'error',
-        //     summary: 'Error',
-        //     detail: 'สมการไม่ถูกต้อง พบตัวอักษร',
-        //   });
-        // }
 
         // if error == 0 do fomula
         if (error == 0) {
-          this.result_form += 'f(x) = ' + convert_formula + '=0' + '\n';
-          this.result_form += `---------------------------------` + '\n';
+          this.result_logs += 'f(x) = ' + convert_formula + '=0' + '\n';
+          this.result_logs += `---------------------------------` + '\n';
 
           let a: number = range.root.min;
           let b: number = range.root.max;
@@ -254,35 +367,49 @@ export class HomeComponent {
             let mid = (a + b) / 2;
 
             if (last_answer == Number(mid.toFixed(6))) {
-              this.result_answer = Number(mid.toFixed(6));
+              this.result_answer.answer = mid.toFixed(6);
               break;
+            } else {
+              last_answer = Number(mid.toFixed(6));
+              i++;
             }
-            i++;
-            last_answer = Number(mid.toFixed(6));
 
-            this.result_form +=
+            this.result_logs +=
               `Iteration Loop ${i}: mid = ${a.toFixed(6)} + ${b.toFixed(
                 6
               )} / 2` + '\n';
-            this.result_form += `Iteration Result: ${mid.toFixed(6)}` + '\n';
+            this.result_logs += `Iteration Result: ${mid.toFixed(6)}` + '\n';
 
             let f_x_test = convert_formula.replace(
               /x/g,
               mid.toFixed(6).toString()
             );
-            this.result_form +=
+            this.result_logs +=
               'f(x) = ' + Number(eval(f_x_test)).toFixed(6).toString() + '\n';
-            this.result_form += `---------------------------------` + '\n';
+            this.result_logs += `---------------------------------` + '\n';
 
+            let change = '';
             if (
               this.f_function(a, convert_formula) *
                 this.f_function(mid, convert_formula) <
               0
             ) {
               b = mid;
+              change = 'L ';
             } else {
               a = mid;
+              change = 'R ';
             }
+
+            this.result_answer.bisection_table.push({
+              loop_count: i,
+              xl: a.toFixed(6),
+              xr: b.toFixed(6),
+              xm: mid.toFixed(6),
+              change: change,
+            });
+
+            this.result_answer.total_loop++;
           }
         }
       }
@@ -293,5 +420,16 @@ export class HomeComponent {
 
   f_function(x: number, convert_formula: any) {
     return eval(convert_formula) - x;
+  }
+
+  clear_logs() {
+    this.result_logs = '';
+  }
+
+  addFunctionFormula(function_name: string) {
+    if (function_name == 'n_root_x') {
+      this.calc_form.formula += 'x^(1/n)';
+      this.readFormula();
+    }
   }
 }
