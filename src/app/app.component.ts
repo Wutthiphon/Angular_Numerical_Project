@@ -18,13 +18,11 @@ import Swal from 'sweetalert2';
 })
 export class AppComponent implements OnInit {
   isApiLoad: boolean = true;
-  isAdmin: boolean = false;
+  isLogin: boolean = false;
   username: string = '';
-  position: string = '';
   sidebarVisible: boolean = false;
   profile_items: MenuItem[] = [];
   aside_items: any[] = [];
-  current_use_system = '';
 
   url_path: string[] = [];
   current_url_path: string[] = [];
@@ -98,7 +96,6 @@ export class AppComponent implements OnInit {
 
     // Reload Aside Menu
     this.aside_items = [];
-    this.current_use_system = '';
     this.aside_items.push({
       label: 'หน้าต่างคำนวน',
       items: [
@@ -108,7 +105,6 @@ export class AppComponent implements OnInit {
           styleClass: 'select-menu' + (this.router.url == '/' ? ' active' : ''),
           routerLink: '/',
           command: () => {
-            this.current_use_system = 'หน้าต่างคำนวน';
             this.openPage();
           },
         },

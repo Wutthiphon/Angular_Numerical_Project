@@ -242,7 +242,7 @@ footer {
     z-index: 200;
   }
   .navbar {
-    padding-left: 290px;
+    padding-left: 25px; //290px;
     position: fixed;
     width: 100%;
     z-index: 100;
@@ -260,7 +260,8 @@ footer {
     display: none;
   }
   .page-content-container {
-    margin-left: 280px;
+    margin-left: 150px;
+    margin-right: 150px;
   }
 }
 

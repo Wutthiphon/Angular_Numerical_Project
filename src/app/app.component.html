@@ -1,55 +1,26 @@
 <div class="main-container">
-  <div class="aside-container" [ngClass]="{'open': sidebarVisible}"
-    [style]="{'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}">
-    <div class="aside-content">
-      <div class="header">
-        <div class="col-12" style="text-align: right;">
-          <p-button icon="pi pi-times" styleClass="p-button-text p-button-rounded p-button-sm close-button"
-            id="hideAside" (click)="toggleAside()" [style]="{color: '#F77100'}"></p-button>
-        </div>
-
-        <div class="col-12" align="center">
-          ยันต์กัน F - The Project
-          <!-- <img src="./assets/image/logo/long_logo.png" style="width: 100%;padding: 5px;" routerLink="/teacher"> -->
-        </div>
-
-        <div class="col-12 flex align-content-center flex-wrap" align="left" style="background-color: #e6eef8;">
-          <div class="flex align-items-center">
-            <!-- <i  class="pi pi-user" style="width: 2.5rem"></i> -->
-            <p-avatar *ngIf="!have_profile_image" icon="pi pi-user" size="large" shape="circle"></p-avatar>
-            <img *ngIf="have_profile_image" alt="logo" [src]="user_profile_image" style="width: 2.8rem"
-              class="profile-image" />
-            <span class="ml-2">
-              <b style="color: #F77100;">{{ username || 'ยังไม่ลงชื่อเข้าใช้งาน' }}</b><br>
-            </span>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <p-menu [model]="aside_items" [style]="{width: '100%',border: 'none'}"></p-menu>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <p-menubar [style]="{'border-radius' : 0,border: 'none','box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}"
     styleClass="navbar">
     <ng-template pTemplate="start">
-      <p-button icon="pi pi-bars" styleClass="p-button-text p-button-sm hamburger-button" id="hideAside"
-        [style]="{color: '#FFFFFF'}" (click)="toggleAside()"></p-button>
-
-      <label class="hide-mobile" style="font-size: 12pt;color: #FFF;">
-        Dev. By Wutthiphon Tassana (Wutthiphon Projects.)
+      <label style="font-size: 12pt;color: #FFF;">
+        <b>ยันต์กัน F - The Project</b><br>
+        <label class="hide-mobile">Dev. By Wutthiphon Tassana (Wutthiphon Projects.)</label>
       </label>
     </ng-template>
 
     <ng-template pTemplate="end">
       <p-menu #profile_menu [model]="profile_items" [popup]="true" appendTo="body"></p-menu>
-      <p-button styleClass="p-button-text p-button-sm" [style]="{color: '#FFF'}" (click)="profile_menu.toggle($event)">
+      <p-button styleClass="p-button-text p-button-sm" [style]="{color: '#FFF'}" (click)="profile_menu.toggle($event)"
+        *ngIf="isLogin">
         <i *ngIf="!have_profile_image" class="pi pi-user"></i>
         <img *ngIf="have_profile_image" alt="logo" [src]="user_profile_image" style="width: 1.8rem"
           class="profile-image" />
         <span class=" ml-2 font-bold">{{ username || 'ยังไม่ลงชื่อเข้าใช้งาน' }}</span>
+      </p-button>
+
+      <p-button styleClass="p-button-text p-button-sm" [style]="{color: '#FFF'}" *ngIf="!isLogin">
+        <i class="pi pi-sign-in"></i>
+        <span class=" ml-2 font-bold">เข้าสู่ระบบ</span>
       </p-button>
     </ng-template>
   </p-menubar>
@@ -86,7 +57,7 @@
         [class]="changepassword_form.input_class" placeholder="รหัสผ่านใหม่อีกครั้ง.."
         [style]="{width: '100%'}"></p-password>
     </div> -->
-    <div class="col-12" align="left">
+    <!-- <div class="col-12" align="left">
       <b>ข้อกำหนดรหัสผ่าน</b>
       <ul>
         <li [class.text-error]="changepassword_form.new_password.length < 8"
@@ -103,7 +74,7 @@
           <b>รหัสต้องไม่ตรงกับรหัสเริ่มต้น</b>
         </li>
       </ul>
-    </div>
+    </div> -->
     <div class="col-12 md:col-12" *ngIf="changepassword_form.input_error">
       <b class="text-error">{{ changepassword_form.input_error }}</b>
     </div>

@@ -2,14 +2,18 @@
   <div class="col-12 md:col-5">
     <p-card header="สมการและการแทนค่า" styleClass="h-full">
       <div class="grid">
-        <!-- <div class="col-12">
-          <b>วิธีการใช้ตัวดำเนินการ</b>
-        </div> -->
         <div class="col-12 flex align-content-center mb-4">
           <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
           <b class="ml-2 mt-1">Debug Mode</b>
         </div>
-        <div class="col-12">
+        <div class="col-12 md:col-4">
+          <b>ตำแหน่งทศนิยม</b>
+          <p-inputNumber [(ngModel)]="calc_form.decimal_point" mode="decimal" placeholder="6 .." styleClass="w-full"
+            [useGrouping]="false">
+          </p-inputNumber>
+        </div>
+
+        <div class="col-12 md:col-8">
           <b>Mode คำนวณ: </b>
           <p-dropdown [options]="calc_mode" [(ngModel)]="calc_form.mode" optionLabel="label" (onChange)="readFormula()"
             optionValue="value"></p-dropdown>
@@ -22,7 +26,9 @@
         <div class="col-12 mb-4">
           <b>ฟังก์ชันเบื้องต้น</b>
           <div class="row">
-            <p-button label="n√X" styleClass="p-button-sm" (onClick)="addFunctionFormula('n_root_x')"></p-button>
+            <p-button styleClass="p-button-sm" (onClick)="addFunctionFormula('n_root_x')">
+              <sup>n</sup><b>√X</b>
+            </p-button>
           </div>
         </div>
         <div class="col-12" *ngIf="debug_mode">

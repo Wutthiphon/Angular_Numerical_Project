@@ -17,6 +17,7 @@ export class HomeComponent {
   ];
   calc_form: any = {
     mode: 'sample_var',
+    decimal_point: 6,
     formula: '',
     html_formula: '',
     convert_formula: '',
@@ -129,6 +130,7 @@ export class HomeComponent {
       mode,
       range,
       sample_var_mode,
+      decimal_point,
     } = this.calc_form;
     this.result_answer.answer = '';
     this.result_answer.bisection_table = [];
@@ -145,9 +147,10 @@ export class HomeComponent {
             '| replace : ' +
             convert_formula_replace +
             '\n';
-          this.result_logs += 'answer :' + answer.toFixed(6).toString() + '\n';
+          this.result_logs +=
+            'answer :' + answer.toFixed(decimal_point).toString() + '\n';
 
-          this.result_answer.answer = answer.toFixed(6).toString();
+          this.result_answer.answer = answer.toFixed(decimal_point).toString();
         } else if (sample_var_mode == 'bisection') {
           let last_answer: number = 0;
 
@@ -174,26 +177,29 @@ export class HomeComponent {
             while (true) {
               let mid = (a + b) / 2;
 
-              if (last_answer == Number(mid.toFixed(6))) {
-                this.result_answer.answer = mid.toFixed(6);
+              if (last_answer == Number(mid.toFixed(decimal_point))) {
+                this.result_answer.answer = mid.toFixed(decimal_point);
                 break;
               } else {
-                last_answer = Number(mid.toFixed(6));
+                last_answer = Number(mid.toFixed(decimal_point));
                 i++;
               }
 
               this.result_logs +=
-                `Iteration Loop ${i}: mid = ${a.toFixed(6)} + ${b.toFixed(
-                  6
-                )} / 2` + '\n';
-              this.result_logs += `Iteration Result: ${mid.toFixed(6)}` + '\n';
+                `Iteration Loop ${i}: mid = ${a.toFixed(
+                  decimal_point
+                )} + ${b.toFixed(6)} / 2` + '\n';
+              this.result_logs +=
+                `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
 
               let f_x_test = convert_formula_replace.replace(
                 /x/g,
-                mid.toFixed(6).toString()
+                mid.toFixed(decimal_point).toString()
               );
               this.result_logs +=
-                'f(x) = ' + Number(eval(f_x_test)).toFixed(6).toString() + '\n';
+                'f(x) = ' +
+                Number(eval(f_x_test)).toFixed(decimal_point).toString() +
+                '\n';
               this.result_logs += `---------------------------------` + '\n';
 
               let change = '';
@@ -211,9 +217,9 @@ export class HomeComponent {
 
               this.result_answer.bisection_table.push({
                 loop_count: i,
-                xl: a.toFixed(6),
-                xr: b.toFixed(6),
-                xm: mid.toFixed(6),
+                xl: a.toFixed(decimal_point),
+                xr: b.toFixed(decimal_point),
+                xm: mid.toFixed(decimal_point),
                 change: change,
               });
 
@@ -288,18 +294,21 @@ export class HomeComponent {
             }
           }
           near_x_upper_get = false;
-          console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
+          console.log(
+            near_x_lower.toFixed(decimal_point),
+            near_x_upper.toFixed(decimal_point)
+          );
           this.result_logs +=
             'Loop 1 Result: ' +
-            near_x_lower.toFixed(6) +
+            near_x_lower.toFixed(decimal_point) +
             ' , ' +
-            near_x_upper.toFixed(6) +
+            near_x_upper.toFixed(decimal_point) +
             '\n';
 
           for (let x = near_x_lower; x < near_x_upper; x = x + 0.000001) {
             let replace_x = convert_formula.replace(
               /x/g,
-              x.toFixed(6).toString()
+              x.toFixed(decimal_point).toString()
             );
             let split_formula = replace_x.split('=');
             let x_formula = split_formula[0];
@@ -308,10 +317,19 @@ export class HomeComponent {
             // Calculate Formula
             let answer = eval(x_formula);
             console.log(
-              x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6)
+              x_formula +
+                '=' +
+                x_answer +
+                '; ans= ' +
+                answer.toFixed(decimal_point)
             );
             this.result_logs +=
-              x_formula + '=' + x_answer + '; ans= ' + answer.toFixed(6) + '\n';
+              x_formula +
+              '=' +
+              x_answer +
+              '; ans= ' +
+              answer.toFixed(decimal_point) +
+              '\n';
 
             if (x == range.x.min) {
               near_x_lower = answer;
@@ -331,12 +349,15 @@ export class HomeComponent {
               break;
             }
           }
-          console.log(near_x_lower.toFixed(6), near_x_upper.toFixed(6));
+          console.log(
+            near_x_lower.toFixed(decimal_point),
+            near_x_upper.toFixed(decimal_point)
+          );
           this.result_logs +=
             'Loop 2 Result: ' +
-            near_x_lower.toFixed(6) +
+            near_x_lower.toFixed(decimal_point) +
             ' , ' +
-            near_x_upper.toFixed(6) +
+            near_x_upper.toFixed(decimal_point) +
             '\n';
         }
       }
@@ -366,26 +387,29 @@ export class HomeComponent {
           while (true) {
             let mid = (a + b) / 2;
 
-            if (last_answer == Number(mid.toFixed(6))) {
-              this.result_answer.answer = mid.toFixed(6);
+            if (last_answer == Number(mid.toFixed(decimal_point))) {
+              this.result_answer.answer = mid.toFixed(decimal_point);
               break;
             } else {
-              last_answer = Number(mid.toFixed(6));
+              last_answer = Number(mid.toFixed(decimal_point));
               i++;
             }
 
             this.result_logs +=
-              `Iteration Loop ${i}: mid = ${a.toFixed(6)} + ${b.toFixed(
-                6
-              )} / 2` + '\n';
-            this.result_logs += `Iteration Result: ${mid.toFixed(6)}` + '\n';
+              `Iteration Loop ${i}: mid = ${a.toFixed(
+                decimal_point
+              )} + ${b.toFixed(6)} / 2` + '\n';
+            this.result_logs +=
+              `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
 
             let f_x_test = convert_formula.replace(
               /x/g,
-              mid.toFixed(6).toString()
+              mid.toFixed(decimal_point).toString()
             );
             this.result_logs +=
-              'f(x) = ' + Number(eval(f_x_test)).toFixed(6).toString() + '\n';
+              'f(x) = ' +
+              Number(eval(f_x_test)).toFixed(decimal_point).toString() +
+              '\n';
             this.result_logs += `---------------------------------` + '\n';
 
             let change = '';
@@ -403,9 +427,9 @@ export class HomeComponent {
 
             this.result_answer.bisection_table.push({
               loop_count: i,
-              xl: a.toFixed(6),
-              xr: b.toFixed(6),
-              xm: mid.toFixed(6),
+              xl: a.toFixed(decimal_point),
+              xr: b.toFixed(decimal_point),
+              xm: mid.toFixed(decimal_point),
               change: change,
             });
 
