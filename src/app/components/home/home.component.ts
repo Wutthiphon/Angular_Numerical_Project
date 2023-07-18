@@ -451,9 +451,12 @@ export class HomeComponent {
   }
 
   addFunctionFormula(function_name: string) {
+    if (function_name == 'root_x') {
+      this.calc_form.formula += 'x^(1/2)';
+    }
     if (function_name == 'n_root_x') {
       this.calc_form.formula += 'x^(1/n)';
-      this.readFormula();
     }
+    this.readFormula();
   }
 }
