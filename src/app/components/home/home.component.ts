@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  debug_mode: boolean = true;
+  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_mode = [
@@ -177,7 +177,10 @@ export class HomeComponent {
             while (true) {
               let mid = (a + b) / 2;
 
-              if (last_answer == Number(mid.toFixed(decimal_point))) {
+              if (
+                Number(a.toFixed(decimal_point)) ==
+                Number(b.toFixed(decimal_point))
+              ) {
                 this.result_answer.answer = mid.toFixed(decimal_point);
                 break;
               } else {
@@ -371,7 +374,10 @@ export class HomeComponent {
           while (true) {
             let mid = (a + b) / 2;
 
-            if (last_answer == Number(mid.toFixed(decimal_point))) {
+            if (
+              Number(a.toFixed(decimal_point)) ==
+              Number(b.toFixed(decimal_point))
+            ) {
               this.result_answer.answer = mid.toFixed(decimal_point);
               break;
             } else {
