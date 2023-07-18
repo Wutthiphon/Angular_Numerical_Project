@@ -10,19 +10,24 @@
           <b class="ml-2 mt-1">Debug Mode</b>
         </div>
         <div class="col-12">
-          <b>Mode คำนวน: </b>
+          <b>Mode คำนวณ: </b>
           <p-dropdown [options]="calc_mode" [(ngModel)]="calc_form.mode" optionLabel="label" (onChange)="readFormula()"
             optionValue="value"></p-dropdown>
         </div>
         <div class="col-12">
           <b>สมการ: </b>
-          <input type="text" pInputText [(ngModel)]="calc_form.formula" placeholder="สมการ..."
-            (input)="readFormula()" />
+          <input type="text" pInputText [(ngModel)]="calc_form.formula" name="calc_form_formula"
+            #calc_form_formula="ngModel" placeholder="สมการ..." (input)="readFormula()" />
         </div>
         <div class="col-12" *ngIf="debug_mode">
           <b>*อ่านสมการได้: </b>
           <label [innerHTML]="calc_form.html_formula" *ngIf="calc_form.html_formula != ''"></label>
           <label *ngIf="calc_form.html_formula == ''">รอใส่สมการ</label>
+
+          <br>
+          <b>*โปรแกรมแทนสมการ: </b>
+          <label [innerHTML]="calc_form.convert_formula" *ngIf="calc_form.convert_formula != ''"></label>
+          <label *ngIf="calc_form.convert_formula == ''">รอใส่สมการ</label>
         </div>
 
         <div class="col-12 flex align-content-center" *ngIf="calc_form.mode == 'find_x'">
