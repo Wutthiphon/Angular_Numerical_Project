@@ -243,8 +243,7 @@ export class HomeComponent {
 
         // if error == 0 do fomula
         if (error == 0) {
-          // console.log(convert_formula + '=0');
-          this.result_form += convert_formula + '=0' + '\n';
+          this.result_form += 'f(x) = ' + convert_formula + '=0' + '\n';
           this.result_form += `---------------------------------` + '\n';
 
           let a: number = range.root.min;
@@ -261,14 +260,18 @@ export class HomeComponent {
             i++;
             last_answer = Number(mid.toFixed(6));
 
-            // console.log(`Iteration Loop ${i} mid = ${a} + ${b} / 2`);
             this.result_form +=
               `Iteration Loop ${i}: mid = ${a.toFixed(6)} + ${b.toFixed(
                 6
               )} / 2` + '\n';
-            // console.log(`Iteration Result: ${mid.toFixed(6)}`);
             this.result_form += `Iteration Result: ${mid.toFixed(6)}` + '\n';
-            // console.log(`f(x) = ${i}: ${mid.toFixed(6)}`);
+
+            let f_x_test = convert_formula.replace(
+              /x/g,
+              mid.toFixed(6).toString()
+            );
+            this.result_form +=
+              'f(x) = ' + Number(eval(f_x_test)).toFixed(6).toString() + '\n';
             this.result_form += `---------------------------------` + '\n';
 
             if (

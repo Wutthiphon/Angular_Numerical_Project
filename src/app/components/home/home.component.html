@@ -74,13 +74,13 @@
         <div class="col-12" *ngIf="calc_form.mode == 'bisection'">
           <b>ช่วงของ Root เริ่มจาก</b>
           <p-inputNumber [(ngModel)]="calc_form.range.root.min" mode="decimal" placeholder="ช่วงของ Root..."
-            styleClass="w-full" [useGrouping]="false">
+            [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
           </p-inputNumber>
         </div>
         <div class="col-12" *ngIf="calc_form.mode == 'bisection'">
           <b>ถึง</b>
           <p-inputNumber [(ngModel)]="calc_form.range.root.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
-            [useGrouping]="false">
+            [minFractionDigits]="2" [useGrouping]="false">
           </p-inputNumber>
         </div>
 
