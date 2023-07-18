@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  debug_mode: boolean = false;
+  debug_mode: boolean = true;
   isLoad_calc: boolean = false;
 
   calc_mode = [
@@ -16,7 +16,7 @@ export class HomeComponent {
     { label: 'Bisection Iteration', value: 'bisection' },
   ];
   calc_form: any = {
-    mode: 'sample_var',
+    mode: 'find_x',
     decimal_point: 6,
     formula: '',
     html_formula: '',
@@ -284,14 +284,15 @@ export class HomeComponent {
               near_x_upper = x_answer;
             }
             if (answer < x_answer) {
-              if (answer > near_x_lower) near_x_lower = answer;
+              if (x > near_x_lower) near_x_lower = x;
             }
             if (answer > x_answer) {
               if (!near_x_upper_get) {
-                near_x_upper = answer;
+                near_x_upper = x;
                 near_x_upper_get = true;
               }
             }
+            this.result_answer.total_loop++;
           }
           near_x_upper_get = false;
           console.log(
@@ -331,34 +332,17 @@ export class HomeComponent {
               answer.toFixed(decimal_point) +
               '\n';
 
-            if (x == range.x.min) {
-              near_x_lower = answer;
-              near_x_upper = x_answer;
-            }
-            if (answer < x_answer) {
-              if (answer > near_x_lower) near_x_lower = answer;
-            }
-            if (answer > x_answer) {
-              if (!near_x_upper_get) {
-                near_x_upper = answer;
-                near_x_upper_get = true;
-              }
-            }
-
-            if (answer == x_answer) {
+            if (answer == x_answer || answer > x_answer) {
+              this.result_logs += 'Answer X = : ' + x.toFixed(decimal_point);
+              this.result_answer.answer = x.toFixed(decimal_point);
               break;
             }
+            this.result_answer.total_loop++;
           }
           console.log(
             near_x_lower.toFixed(decimal_point),
             near_x_upper.toFixed(decimal_point)
           );
-          this.result_logs +=
-            'Loop 2 Result: ' +
-            near_x_lower.toFixed(decimal_point) +
-            ' , ' +
-            near_x_upper.toFixed(decimal_point) +
-            '\n';
         }
       }
 
