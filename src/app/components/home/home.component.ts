@@ -144,11 +144,11 @@ export class HomeComponent {
           this.result_logs +=
             'formula : ' +
             convert_formula +
-            '| replace : ' +
+            ' | replace : ' +
             convert_formula_replace +
             '\n';
           this.result_logs +=
-            'answer :' + answer.toFixed(decimal_point).toString() + '\n';
+            'answer: ' + answer.toFixed(decimal_point).toString() + '\n';
 
           this.result_answer.answer = answer.toFixed(decimal_point).toString();
         } else if (sample_var_mode == 'bisection') {
