@@ -87,6 +87,8 @@ export class HomeComponent {
             use_alphabet.push(element);
             this.calc_form.input_array.push({ label: element, value: '' });
           }
+        } else {
+          this.calc_form.convert_formula_replace = '';
         }
       }
 
@@ -139,7 +141,12 @@ export class HomeComponent {
     setTimeout(() => {
       if (mode == 'sample_var') {
         if (sample_var_mode == 'normal') {
-          let answer = eval(convert_formula_replace);
+          let answer = 0;
+          if (convert_formula_replace) {
+            answer = eval(convert_formula_replace);
+          } else {
+            answer = eval(convert_formula);
+          }
 
           this.result_logs +=
             'formula : ' +
