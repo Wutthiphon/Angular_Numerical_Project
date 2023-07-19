@@ -219,10 +219,10 @@ export class HomeComponent {
                 0
               ) {
                 b = mid;
-                change = 'L ';
+                change = 'R ';
               } else {
                 a = mid;
-                change = 'R ';
+                change = 'L ';
               }
 
               this.result_answer.bisection_table.push({
