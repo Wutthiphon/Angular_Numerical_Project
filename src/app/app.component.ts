@@ -110,32 +110,32 @@ export class AppComponent implements OnInit {
         },
       ],
     });
-    // this.aside_items.push({
-    //   label: 'Data Source',
-    //   items: [
-    //     {
-    //       label: 'Data Source',
-    //       icon: 'pi pi-file-excel',
-    //       styleClass:
-    //         'select-menu' + (this.router.url == '/datasource' ? ' active' : ''),
-    //       routerLink: '/datasource',
-    //       command: () => {
-    //         this.openPage();
-    //       },
-    //     },
-    //     {
-    //       label: 'โปรไฟล์',
-    //       icon: 'pi pi-user',
-    //       styleClass:
-    //         'select-menu' +
-    //         (this.router.url == '/teacher/profile' ? ' active' : ''),
-    //       routerLink: '/teacher/profile',
-    //       command: () => {
-    //         this.openPage();
-    //       },
-    //     },
-    //   ],
-    // });
+    this.aside_items.push({
+      label: 'Data Source',
+      items: [
+        {
+          label: 'Data Source',
+          icon: 'pi pi-file-excel',
+          styleClass:
+            'select-menu' + (this.router.url == '/datasource' ? ' active' : ''),
+          routerLink: '/datasource',
+          command: () => {
+            this.openPage();
+          },
+        },
+        {
+          label: 'โปรไฟล์',
+          icon: 'pi pi-user',
+          styleClass:
+            'select-menu' +
+            (this.router.url == '/teacher/profile' ? ' active' : ''),
+          routerLink: '/teacher/profile',
+          command: () => {
+            this.openPage();
+          },
+        },
+      ],
+    });
 
     // Disable Force Refresh
     this.force_refresh = false;

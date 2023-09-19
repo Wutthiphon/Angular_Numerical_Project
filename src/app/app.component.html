@@ -1,4 +1,21 @@
 <div class="main-container">
+  <div class="aside-container" [ngClass]="{'open': sidebarVisible}"
+    [style]="{'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}">
+    <div class="aside-content">
+      <div class="header">
+        <div class="col-12" style="text-align: right;">
+          <p-button icon="pi pi-times" styleClass="p-button-text p-button-rounded p-button-sm close-button"
+            id="hideAside" (click)="toggleAside()" [style]="{color: '#00A86B'}"></p-button>
+        </div>
+
+        <div class="col-12">
+          <p-panelMenu [model]="aside_items" [style]="{width: '100%',border: 'none'}" styleClass="panelMenu-custom">
+          </p-panelMenu>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <p-menubar [style]="{'border-radius' : 0,border: 'none','box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}"
     styleClass="navbar">
     <ng-template pTemplate="start">
@@ -6,22 +23,6 @@
         <b>ยันต์กัน F - The Project</b><br>
         <label class="hide-mobile">Dev. By Wutthiphon Tassana (Wutthiphon Projects.)</label>
       </label>
-    </ng-template>
-
-    <ng-template pTemplate="end">
-      <p-menu #profile_menu [model]="profile_items" [popup]="true" appendTo="body"></p-menu>
-      <p-button styleClass="p-button-text p-button-sm" [style]="{color: '#FFF'}" (click)="profile_menu.toggle($event)"
-        *ngIf="isLogin">
-        <i *ngIf="!have_profile_image" class="pi pi-user"></i>
-        <img *ngIf="have_profile_image" alt="logo" [src]="user_profile_image" style="width: 1.8rem"
-          class="profile-image" />
-        <span class=" ml-2 font-bold">{{ username || 'ยังไม่ลงชื่อเข้าใช้งาน' }}</span>
-      </p-button>
-
-      <p-button styleClass="p-button-text p-button-sm" [style]="{color: '#FFF'}" *ngIf="!isLogin">
-        <i class="pi pi-sign-in"></i>
-        <span class=" ml-2 font-bold">เข้าสู่ระบบ</span>
-      </p-button>
     </ng-template>
   </p-menubar>
 </div>
@@ -36,60 +37,6 @@
     </div>
   </ng-template>
 </p-confirmDialog>
-
-
-<p-dialog header="เปลี่ยนรหัสผ่าน" [(visible)]="changepassword_dialog" [modal]="true"
-  [style]="{ width: '40vw','min-width':'360.5px' }" [draggable]="false" [resizable]="false">
-  <div class="grid">
-    <!-- <div class="col-12 md:col-12">
-      รหัสผ่านเดิม
-      <p-password [(ngModel)]="changepassword_form.old_password" [feedback]="false" placeholder="รหัสผ่านเดิม.."
-        [style]="{width: '100%'}"></p-password>
-    </div>
-    <div class="col-12 md:col-12">
-      รหัสผ่านใหม่
-      <p-password [(ngModel)]="changepassword_form.new_password" [feedback]="false" placeholder="รหัสผ่านใหม่.."
-        [class]="changepassword_form.input_class" [style]="{width: '100%'}"></p-password>
-    </div>
-    <div class="col-12 md:col-12">
-      รหัสผ่านใหม่อีกครั้ง
-      <p-password [(ngModel)]="changepassword_form.confirm_password" [feedback]="false"
-        [class]="changepassword_form.input_class" placeholder="รหัสผ่านใหม่อีกครั้ง.."
-        [style]="{width: '100%'}"></p-password>
-    </div> -->
-    <!-- <div class="col-12" align="left">
-      <b>ข้อกำหนดรหัสผ่าน</b>
-      <ul>
-        <li [class.text-error]="changepassword_form.new_password.length < 8"
-          [class.text-success]="changepassword_form.new_password.length >= 8">
-          <b>รหัสผ่านต้องมีความยาว 8 ตัวอักษรขึ้นไป</b>
-        </li>
-        <li
-          [class.text-error]="changepassword_form.new_password != changepassword_form.confirm_password || changepassword_form.confirm_password.length < 8"
-          [class.text-success]="changepassword_form.new_password == changepassword_form.confirm_password && changepassword_form.confirm_password.length >= 8">
-          <b>รหัสผ่านทั้ง 2 ช่องต้องตรงกัน</b>
-        </li>
-        <li [class.text-error]="this.changepassword_form.old_password == changepassword_form.new_password"
-          [class.text-success]="this.changepassword_form.old_password != changepassword_form.new_password">
-          <b>รหัสต้องไม่ตรงกับรหัสเริ่มต้น</b>
-        </li>
-      </ul>
-    </div> -->
-    <div class="col-12 md:col-12" *ngIf="changepassword_form.input_error">
-      <b class="text-error">{{ changepassword_form.input_error }}</b>
-    </div>
-  </div>
-
-  <ng-template pTemplate="footer">
-    <div class="ui-dialog-buttonpane p-clearfix">
-      <button type="button" pButton icon="pi pi-times" label="ปิด" (click)="changepassword_dialog = false"
-        class="p-button-secondary p-button-outlined p-button-rounded p-button-text"
-        style="margin-right: .25em"></button>
-      <!-- <button type="button" pButton icon="pi pi-check" label="เปลี่ยนรหัสผ่าน" (click)="onChangePasswordSubmit()"
-        class="p-button-primary p-button-rounded"></button> -->
-    </div>
-  </ng-template>
-</p-dialog>
 
 <div class="page-content-container">
   <router-outlet></router-outlet>

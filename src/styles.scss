@@ -3,8 +3,6 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap");
-@import "quill/dist/quill.core.css";
-@import "quill/dist/quill.snow.css";
 @import "src/assets/css/theme.css";
 
 $custom-font: "Kanit", sans-serif;
@@ -50,6 +48,13 @@ h6 {
 button:disabled {
   border: 0;
   background-color: #e0e0e0 !important;
+  color: #9e9e9e !important;
+  cursor: not-allowed !important;
+}
+
+.mdc-icon-button:disabled {
+  border: 0;
+  background-color: #ffffff00 !important;
   color: #9e9e9e !important;
   cursor: not-allowed !important;
 }
@@ -203,9 +208,6 @@ footer {
 .page-content-container {
   padding: 74px 10px 10px 10px;
 }
-.student-page-content-container {
-  padding: 80px 10px 10px 10px;
-}
 
 .navbar {
   height: 64px;
@@ -237,12 +239,12 @@ footer {
   /* Expand aside container on desktop */
   .aside-container {
     position: fixed;
-    width: 280px;
+    width: 250px;
     height: 100%;
     z-index: 200;
   }
   .navbar {
-    padding-left: 25px; //290px;
+    padding-left: 260px;
     position: fixed;
     width: 100%;
     z-index: 100;
@@ -251,7 +253,7 @@ footer {
     background-color: white;
     overflow-y: auto;
     height: 100vh;
-    width: 280px;
+    width: 250px;
   }
   .hide-mobile {
     display: block;
@@ -260,8 +262,7 @@ footer {
     display: none;
   }
   .page-content-container {
-    margin-left: 150px;
-    margin-right: 150px;
+    margin-left: 250px;
   }
 }
 
@@ -286,7 +287,7 @@ footer {
     background-color: white;
     overflow-y: auto;
     height: 100vh;
-    width: 280px;
+    width: 250px;
     transition: all 0.5s ease-in-out;
   }
   .close-button {
@@ -333,12 +334,12 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ff9d4d;
+  background: #ff9300;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f77100;
+  background: #cb7700;
 }
 
 // Material
@@ -364,73 +365,60 @@ mat-form-field {
   max-width: 100%;
 }
 
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.login-form-layout {
-  max-width: 450px;
-}
-
-.login-form {
+.p-tabmenu {
   border-radius: 0px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
-  background-color: #f77100 !important;
-  color: white !important;
+  background-color: #a81c00 !important;
+  color: rgb(255, 255, 255) !important;
+  border-radius: 0px;
 }
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-  background-color: #f77100 !important;
+  background-color: #ff9300 !important;
   color: white !important;
 }
 
 .p-fieldset .p-fieldset-legend {
-  background-color: #f77100 !important;
+  background-color: #5c5c5c !important;
   color: white !important;
-}
-
-.club-cover-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-
-.club-image-slide-show {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
-    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 *:focus {
   box-shadow: none !important;
 }
 
-.custom-badge {
-  height: 22px;
-  width: 22px;
-  background-color: rgb(255, 197, 197);
-  color: rgb(196, 49, 49);
-  border-radius: 50%;
-  display: inline-block;
-  text-align: center;
-  padding-top: 2.5px;
-}
+.panelMenu-custom {
+  .p-panelmenu-panel .p-panelmenu-header-link {
+    background-color: #fff;
+    border: none;
+    min-height: 45px;
+    padding: 4px 10px;
+  }
 
-.notification-badge {
-  height: 15px;
-  width: 15px;
-  background-color: #f77100;
-  border-radius: 50%;
-  display: inline-block;
+  .p-panelmenu-panel .p-highlight .p-panelmenu-header-link {
+    background-color: #fff;
+  }
+
+  .p-panelmenu-panel .p-highlight .p-panelmenu-header-link {
+    border-radius: 6px;
+  }
+
+  .p-panelmenu-panel .p-panelmenu-content {
+    border: none;
+  }
+
+  .p-panelmenu-panel .p-menuitem-link:hover {
+    border-radius: 8px;
+  }
+
+  .p-panelmenu-panel .p-panelmenu-header-link .p-icon-wrapper {
+    order: 1;
+  }
+  .p-panelmenu-panel .p-panelmenu-header-link .p-menuitem-text {
+    flex-grow: 1;
+  }
 }
 
 @-webkit-keyframes AnimationName {
