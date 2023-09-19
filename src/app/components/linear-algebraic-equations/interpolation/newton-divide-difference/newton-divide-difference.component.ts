@@ -122,6 +122,15 @@ export class NewtonDivideDifferenceComponent {
     }
   }
 
+  reset() {
+    this.calc_form = {
+      target: null,
+      point_1: null,
+      point_2: null,
+      point_3: null,
+    };
+  }
+
   clear_logs() {
     this.result_logs = '';
   }
