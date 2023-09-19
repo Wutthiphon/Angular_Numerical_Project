@@ -123,12 +123,10 @@ export class NewtonDivideDifferenceComponent {
   }
 
   reset() {
-    this.calc_form = {
-      target: null,
-      point_1: null,
-      point_2: null,
-      point_3: null,
-    };
+    this.calc_form.target = null;
+    this.calc_form.point_1 = null;
+    this.calc_form.point_2 = null;
+    this.calc_form.point_3 = null;
   }
 
   clear_logs() {
