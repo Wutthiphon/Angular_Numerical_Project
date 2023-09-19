@@ -82,39 +82,11 @@ import { AvatarModule } from 'primeng/avatar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { GraphicalMethodComponent } from './components/graphical-method/graphical-method.component';
-import { BisectionMethodComponent } from './components/bisection-method/bisection-method.component';
-import { FalsePositionComponent } from './components/false-position/false-position.component';
-import { OnePointIterationComponent } from './components/one-point-iteration/one-point-iteration.component';
-import { TaylorComponent } from './components/taylor/taylor.component';
-import { NewtonRaphsonComponent } from './components/newton-raphson/newton-raphson.component';
-import { CramerRuleComponent } from './components/cramer-rule/cramer-rule.component';
-import { GaussEliminationComponent } from './components/gauss-elimination/gauss-elimination.component';
-import { SecantComponent } from './components/secant/secant.component';
-import { MatrixInversionComponent } from './components/matrix-inversion/matrix-inversion.component';
-import { LUDecomposComponent } from './components/lu-decompos/lu-decompos.component';
-import { ConjugateComponent } from './components/conjugate/conjugate.component';
-import { InterpolationComponent } from './components/interpolation/interpolation.component';
-import { ExtrapolationComponent } from './components/extrapolation/extrapolation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    GraphicalMethodComponent,
-    BisectionMethodComponent,
-    FalsePositionComponent,
-    OnePointIterationComponent,
-    TaylorComponent,
-    NewtonRaphsonComponent,
-    CramerRuleComponent,
-    GaussEliminationComponent,
-    SecantComponent,
-    MatrixInversionComponent,
-    LUDecomposComponent,
-    ConjugateComponent,
-    InterpolationComponent,
-    ExtrapolationComponent,
   ],
   imports: [
     BrowserModule,
