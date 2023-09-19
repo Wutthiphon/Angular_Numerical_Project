@@ -113,13 +113,6 @@ p-inputnumber {
 }
 
 .select-menu.active {
-  // background-color: #F77100;
-  background: linear-gradient(
-    124deg,
-    rgba(247, 113, 0, 1) 0%,
-    rgba(247, 172, 0, 1) 100%
-  );
-
   .p-menuitem-text {
     color: #ffffff !important;
   }
@@ -130,16 +123,6 @@ p-inputnumber {
 
 .select-menu :hover {
   border-radius: 8px;
-}
-
-.select-menu.active :hover {
-  border-radius: 8px;
-  // background-color: #F77100 !important;
-  background: linear-gradient(
-    -124deg,
-    rgba(247, 113, 0, 1) 0%,
-    rgba(247, 172, 0, 1) 100%
-  ) !important;
 }
 
 .p-menu .p-submenu-header {
@@ -390,6 +373,16 @@ mat-form-field {
 }
 
 .panelMenu-custom {
+  .select-menu.active .p-menuitem-link-active {
+    border-radius: 8px;
+    // background-color: #F77100 !important;
+    background: linear-gradient(
+      -124deg,
+      rgba(247, 113, 0, 1) 0%,
+      rgba(247, 172, 0, 1) 100%
+    ) !important;
+  }
+
   .p-panelmenu-panel .p-panelmenu-header-link {
     background-color: #fff;
     border: none;
