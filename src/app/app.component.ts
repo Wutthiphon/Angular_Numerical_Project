@@ -146,16 +146,28 @@ export class AppComponent implements OnInit {
           //       icon: 'pi pi-calculator',
           //       styleClass:
           //         'select-menu' +
-          //         (this.router.url == '/linear_algebraic_equations/gradient/gauss_seidel' ? ' active' : ''),
+          //         (this.router.url ==
+          //         '/linear_algebraic_equations/gradient/gauss_seidel'
+          //           ? ' active'
+          //           : ''),
           //       routerLink: '/linear_algebraic_equations/gradient/gauss_seidel',
+          //       command: () => {
+          //         this.openPage();
+          //       },
           //     },
           //     {
           //       label: 'Conjugate',
           //       icon: 'pi pi-calculator',
           //       styleClass:
           //         'select-menu' +
-          //         (this.router.url == '/linear_algebraic_equations/gradient/conjugate' ? ' active' : ''),
+          //         (this.router.url ==
+          //         '/linear_algebraic_equations/gradient/conjugate'
+          //           ? ' active'
+          //           : ''),
           //       routerLink: '/linear_algebraic_equations/gradient/conjugate',
+          //       command: () => {
+          //         this.openPage();
+          //       },
           //     },
           //   ],
           // },
@@ -175,22 +187,38 @@ export class AppComponent implements OnInit {
                     : ''),
                 routerLink:
                   '/linear_algebraic_equations/interpolation/newton_divide_difference',
+                command: () => {
+                  this.openPage();
+                },
               },
               // {
               //   label: 'Lagrange',
               //   icon: 'pi pi-calculator',
               //   styleClass:
               //     'select-menu' +
-              //     (this.router.url == '/linear_algebraic_equations/interpolation//lagrange' ? ' active' : ''),
-              //   routerLink: '/linear_algebraic_equations/interpolation//lagrange',
+              //     (this.router.url ==
+              //     '/linear_algebraic_equations/interpolation//lagrange'
+              //       ? ' active'
+              //       : ''),
+              //   routerLink:
+              //     '/linear_algebraic_equations/interpolation//lagrange',
+              //   command: () => {
+              //     this.openPage();
+              //   },
               // },
               // {
               //   label: 'Spline',
               //   icon: 'pi pi-calculator',
               //   styleClass:
               //     'select-menu' +
-              //     (this.router.url == '/linear_algebraic_equations/interpolation//spline' ? ' active' : ''),
+              //     (this.router.url ==
+              //     '/linear_algebraic_equations/interpolation//spline'
+              //       ? ' active'
+              //       : ''),
               //   routerLink: '/linear_algebraic_equations/interpolation//spline',
+              //   command: () => {
+              //     this.openPage();
+              //   },
               // },
             ],
           },
