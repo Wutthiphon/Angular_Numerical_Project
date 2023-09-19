@@ -96,46 +96,174 @@ export class AppComponent implements OnInit {
 
     // Reload Aside Menu
     this.aside_items = [];
-    this.aside_items.push({
-      label: 'หน้าต่างคำนวน',
-      items: [
-        {
-          label: 'หน้าต่างคำนวน',
-          icon: 'pi pi-home',
-          styleClass: 'select-menu' + (this.router.url == '/' ? ' active' : ''),
-          routerLink: '/',
-          command: () => {
-            this.openPage();
+    this.aside_items.push(
+      {
+        label: 'Root Of Equations',
+        icon: 'pi pi-circle-fill',
+        expanded: true,
+        items: [
+          {
+            label: 'Graphical Method',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/graphical_method' ? ' active' : ''),
+            routerLink: '/graphical_method',
+            command: () => {
+              this.openPage();
+            },
           },
-        },
-      ],
-    });
-    this.aside_items.push({
-      label: 'Data Source',
-      items: [
-        {
-          label: 'Data Source',
-          icon: 'pi pi-file-excel',
-          styleClass:
-            'select-menu' + (this.router.url == '/datasource' ? ' active' : ''),
-          routerLink: '/datasource',
-          command: () => {
-            this.openPage();
+          {
+            label: 'Bisection Method',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/bisection_method' ? ' active' : ''),
+            routerLink: '/bisection_method',
+            command: () => {
+              this.openPage();
+            },
           },
-        },
-        {
-          label: 'โปรไฟล์',
-          icon: 'pi pi-user',
-          styleClass:
-            'select-menu' +
-            (this.router.url == '/teacher/profile' ? ' active' : ''),
-          routerLink: '/teacher/profile',
-          command: () => {
-            this.openPage();
+          {
+            label: 'False Position',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/false_position' ? ' active' : ''),
+            routerLink: '/false_position',
+            command: () => {
+              this.openPage();
+            },
           },
-        },
-      ],
-    });
+          {
+            label: 'One Point Iteration',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/one_point_iteration' ? ' active' : ''),
+            routerLink: '/one_point_iteration',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Taylor Series',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' + (this.router.url == '/taylor' ? ' active' : ''),
+            routerLink: '/taylor',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Newton Raphson',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/newton_raphson' ? ' active' : ''),
+            routerLink: '/newton_raphson',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: "Cramer's Rule",
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/cramer_rule' ? ' active' : ''),
+            routerLink: '/cramer_rule',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Gauss Elimination',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/gauss_elimination' ? ' active' : ''),
+            routerLink: '/gauss_elimination',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Secant',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' + (this.router.url == '/secant' ? ' active' : ''),
+            routerLink: '/secant',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Matrix Inversion',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == 'matrix_inversion' ? ' active' : ''),
+            routerLink: '/matrix_inversion',
+            command: () => {
+              this.openPage();
+            },
+          },
+        ],
+      },
+      {
+        label: 'Linear Algebric Equations',
+        icon: 'pi pi-circle-fill',
+        expanded: true,
+        items: [
+          {
+            label: 'LU Decompos Method',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/LU_decompos' ? ' active' : ''),
+            routerLink: '/LU_decompos',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Conjugate',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/conjugate' ? ' active' : ''),
+            routerLink: '/conjugate',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Interpolation',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/interpolation' ? ' active' : ''),
+            routerLink: '/interpolation',
+            command: () => {
+              this.openPage();
+            },
+          },
+          {
+            label: 'Extrapolation',
+            icon: 'pi pi-calculator',
+            styleClass:
+              'select-menu' +
+              (this.router.url == '/extrapolation' ? ' active' : ''),
+            routerLink: '/extrapolation',
+            command: () => {
+              this.openPage();
+            },
+          },
+        ],
+      }
+    );
 
     // Disable Force Refresh
     this.force_refresh = false;
