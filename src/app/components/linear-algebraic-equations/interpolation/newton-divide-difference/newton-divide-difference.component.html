@@ -1,0 +1,139 @@
+<div class="grid">
+  <div class="col-12 md:col-5">
+    <div class="grid">
+      <div class="col-12">
+        <p-card header="ชุดข้อมูล" styleClass="h-full">
+          <div class="grid">
+            <div class="col-12" align="right">
+              <p-button label="เพิ่มจุด" icon="pi pi-plus" styleClass="p-button-rounded p-button-success p-button-sm"
+                (click)="addPoint()"></p-button>
+            </div>
+            <div class="col-12">
+              <p-table [value]="calc_form.dataset">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 10%;">จุดที่</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                  <tr>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>
+                      <p-inputNumber [(ngModel)]="data.x" name="input_data_x" #input_data_x="ngModel"
+                        [style]="{ width: '100%' }" mode="decimal" [maxFractionDigits]="10" placeholder="x">
+                      </p-inputNumber>
+                    </td>
+                    <td>
+                      <p-inputNumber [(ngModel)]="data.y" name="input_data_y" #input_data_y="ngModel"
+                        [style]="{ width: '100%' }" mode="decimal" [maxFractionDigits]="10" placeholder="y">
+                      </p-inputNumber>
+                    </td>
+                    <td>
+                      <p-button icon="pi pi-times" styleClass="p-button-rounded p-button-danger p-button-sm"
+                        (click)="removePoint(rowIndex)"></p-button>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="4" style="text-align: center;">ไม่มีจุด</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-card>
+      </div>
+      <div class="col-12">
+        <p-card header="วิธีการหาคำตอบ" styleClass="h-full">
+          <div class="grid">
+            <div class="col-12 flex align-content-center mb-4">
+              <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
+              <b class="ml-2 mt-1">Debug Mode</b>
+            </div>
+            <div class="col-12 md:col-4">
+              <b>ตำแหน่งทศนิยม</b>
+              <p-inputNumber [(ngModel)]="calc_form.decimal_point" mode="decimal" placeholder="6 .." styleClass="w-full"
+                [useGrouping]="false">
+              </p-inputNumber>
+            </div>
+            <div class="col-12 md:col-8">
+              <b>Mode คำนวณ: </b>
+              <p-dropdown [options]="calc_mode" [(ngModel)]="calc_form.mode" optionLabel="label"
+                optionValue="value"></p-dropdown>
+            </div>
+
+            <div class="col-12">
+              <b>จุดที่ต้องการหาคำตอบ</b>
+              <p-inputNumber [(ngModel)]="calc_form.target" mode="decimal" placeholder="จุดที่ต้องการหาคำตอบ"
+                styleClass="w-full">
+              </p-inputNumber>
+            </div>
+            <div class="col-12">
+              <div class="grid" *ngIf="calc_form.mode == 'linear'">
+                <div class="col-6">
+                  <b>จุดที่ 1</b>
+                  <p-inputNumber [(ngModel)]="calc_form.point_1" mode="decimal" placeholder="จุดที่ 1" [min]="1"
+                    styleClass="w-full" [useGrouping]="false">
+                  </p-inputNumber>
+                </div>
+                <div class="col-6">
+                  <b>จุดที่ 2</b>
+                  <p-inputNumber [(ngModel)]="calc_form.point_2" mode="decimal" placeholder="จุดที่ 2" [min]="1"
+                    styleClass="w-full" [useGrouping]="false">
+                  </p-inputNumber>
+                </div>
+              </div>
+              <div class="grid" *ngIf="calc_form.mode == 'quadratic'">
+                <div class="col-4">
+                  <b>จุดที่ 1</b>
+                  <p-inputNumber [(ngModel)]="calc_form.point_1" mode="decimal" placeholder="จุดที่ 1" [min]="1"
+                    styleClass="w-full" [useGrouping]="false">
+                  </p-inputNumber>
+                </div>
+                <div class="col-4">
+                  <b>จุดที่ 2</b>
+                  <p-inputNumber [(ngModel)]="calc_form.point_2" mode="decimal" placeholder="จุดที่ 2" [min]="1"
+                    styleClass="w-full" [useGrouping]="false">
+                  </p-inputNumber>
+                </div>
+                <div class="col-4">
+                  <b>จุดที่ 3</b>
+                  <p-inputNumber [(ngModel)]="calc_form.point_3" mode="decimal" placeholder="จุดที่ 3" [min]="1"
+                    styleClass="w-full" [useGrouping]="false">
+                  </p-inputNumber>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" align="right">
+              <p-button label="คำนวณ" icon="pi pi-cog" styleClass="p-button-rounded p-button-success p-button-sm"
+                (click)="calculate()"></p-button>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 md:col-7">
+    <p-card header="คำตอบ" styleClass="h-full">
+      <div class="grid">
+        <div class="col-12">
+          <div class="col-12" *ngIf="debug_mode">
+            <b>Logs:</b>
+            <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
+            <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
+              class="p-button-sm"></button>
+          </div>
+
+          <div class="col-12">
+            <b>คำตอบ:</b>
+            {{ calc_form.answer || 'ยังไม่มีการคำนวณ' }}
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

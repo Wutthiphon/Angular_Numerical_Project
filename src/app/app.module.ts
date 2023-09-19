@@ -83,10 +83,31 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
+// Root Of Equations
+import { GraphicalComponent } from './components/root_of_equation/graphical/graphical.component';
+import { BisectionComponent } from './components/root_of_equation/bisection/bisection.component';
+import { FalsePositionComponent } from './components/root_of_equation/false-position/false-position.component';
+import { OnePointIterationComponent } from './components/root_of_equation/one-point-iteration/one-point-iteration.component';
+import { NewtonRaphsonComponent } from './components/root_of_equation/newton-raphson/newton-raphson.component';
+import { SecantComponent } from './components/root_of_equation/secant/secant.component';
+// Linear Algebraic Equations
+// Interpolation
+import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-equations/interpolation/newton-divide-difference/newton-divide-difference.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    // Root Of Equations
+    GraphicalComponent,
+    BisectionComponent,
+    FalsePositionComponent,
+    OnePointIterationComponent,
+    NewtonRaphsonComponent,
+    SecantComponent,
+    // Linear Algebraic Equations
+    // Interpolation
+    NewtonDivideDifferenceComponent,
   ],
   imports: [
     BrowserModule,

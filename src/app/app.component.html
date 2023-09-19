@@ -8,6 +8,14 @@
             id="hideAside" (click)="toggleAside()" [style]="{color: '#ff9300'}"></p-button>
         </div>
 
+        <div class="col-12" align="center">
+          <h1 style="color: #646464">
+            <b style="font-size: 32pt;color: #f38621">N</b><b>umerical</b>
+            Method<br>
+            Calculator Project
+          </h1>
+        </div>
+
         <div class="col-12">
           <p-panelMenu [model]="aside_items" [style]="{width: '100%',border: 'none'}" styleClass="panelMenu-custom">
           </p-panelMenu>
@@ -23,11 +31,11 @@
         <div style="font-size: 12pt;color: #FFF;" class="flex align-items-center">
           <p-button icon="pi pi-bars" styleClass="p-button-text p-button-sm hamburger-button" id="hideAside"
             [style]="{color: '#FFF'}" (click)="toggleAside()"></p-button>
-          <b>ยันต์กัน F - The Project</b>
+          <b>ยันต์กัน F - Numerical Project</b>
         </div>
       </div>
       <div style="font-size: 12pt;color: #FFF;">
-        <label class="hide-mobile">Dev. By Wutthiphon Tassana (Wutthiphon Projects.)</label>
+        <label class="hide-mobile">Dev. By Wutthiphon Tassana</label>
       </div>
     </ng-template>
   </p-menubar>
@@ -46,4 +54,11 @@
 
 <div class="page-content-container">
   <router-outlet></router-outlet>
+
+  <div class="grid">
+    <div class="col-12" align="center" style="color: #8b8b8b;">
+      <b>Copyright &copy; 2023 </b>
+      <a href="https://wutthiphon.space" target="_blank" style="color: #8b8b8b">Wutthiphon Projects</a>
+    </div>
+  </div>
 </div>
