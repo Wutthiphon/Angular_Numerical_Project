@@ -51,14 +51,14 @@ export class NewtonDivideDifferenceComponent {
         let y1 = find_point_1.y;
         let y2 = find_point_2.y;
 
-        let answer = y1 + ((target - x1) / (x2 - x1)) * (y2 - y1);
+        let answer = ((y2 - y1) / (x2 - x1)) * (target - x1) + y1;
 
         this.calc_form.answer = answer.toFixed(decimal_point);
         this.isLoad_calc = false;
 
         // Logs
         this.result_logs += `Point 1: (${find_point_1.x}, ${find_point_1.y})\nPoint 2: (${find_point_2.x}, ${find_point_2.y})\n`;
-        this.result_logs += `f(${target}) = ${y1} + ((${target} - ${x1}) / (${x2} - ${x1})) * (${y2} - ${y1})\n`;
+        this.result_logs += `f(${target}) = ((${y2} - ${y1}) / (${x2} - ${x1})) * (${target} - ${x1}) + ${y1}\n`;
         this.result_logs += `Ans: ${answer.toFixed(decimal_point)}\n`;
       }
     } else if (mode == 'quadratic') {
@@ -92,14 +92,14 @@ export class NewtonDivideDifferenceComponent {
       let n = dataset.length;
 
       for (let i = 0; i < n; i++) {
-        let term = dataset[i].y;
+        let temp = dataset[i].y;
         for (let j = 0; j < n; j++) {
           if (j != i) {
-            term =
-              (term * (target - dataset[j].x)) / (dataset[i].x - dataset[j].x);
+            temp =
+              (temp * (target - dataset[j].x)) / (dataset[i].x - dataset[j].x);
           }
         }
-        answer += term;
+        answer += temp;
       }
 
       this.calc_form.answer = answer.toFixed(decimal_point);
@@ -108,14 +108,14 @@ export class NewtonDivideDifferenceComponent {
       // Logs
       this.result_logs += `f(${target}) = `;
       for (let i = 0; i < n; i++) {
-        this.result_logs += `${dataset[i].y}`;
+        this.result_logs += `(${dataset[i].y})`;
         for (let j = 0; j < n; j++) {
           if (j != i) {
             this.result_logs += ` * (${target} - ${dataset[j].x}) / (${dataset[i].x} - ${dataset[j].x})`;
           }
         }
         if (i != n - 1) {
-          this.result_logs += ' + \n';
+          this.result_logs += ' + ';
         }
       }
       this.result_logs += `\nAns: ${answer.toFixed(decimal_point)}\n`;
