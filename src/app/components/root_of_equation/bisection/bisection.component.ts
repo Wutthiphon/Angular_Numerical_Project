@@ -15,7 +15,6 @@ export class BisectionComponent {
     { label: 'หาค่า X', value: 'find_x' },
     { label: 'แทนค่าสมการ', value: 'sample_var' },
     { label: 'Bisection Iteration', value: 'bisection' },
-    // { label: 'False Position', value: 'false_position' },
   ];
   calc_form: any = {
     mode: 'find_x',
@@ -36,7 +35,6 @@ export class BisectionComponent {
   sample_var_mode = [
     { label: 'ปกติ (แทนค่าทั้งหมดเพื่อหาคำตอบ)', value: 'normal' },
     { label: 'Bisection Iteration', value: 'bisection' },
-    // { label: 'False Position', value: 'false_position' },
   ];
 
   result_logs: string = '';
@@ -422,77 +420,6 @@ export class BisectionComponent {
           }
         }
 
-        // if (mode == 'false_position') {
-        //   // Check range of x have min and max
-        //   if (range.root.min == null || range.root.max == null) {
-        //     error++;
-        //     this.messageService.add({
-        //       severity: 'error',
-        //       summary: 'Error',
-        //       detail: 'กรุณาใส่ช่วงของ X',
-        //     });
-        //   }
-
-        //   // if error == 0 do fomula
-        //   if (error == 0) {
-        //     let xl: number = range.root.min;
-        //     let xr: number = range.root.max;
-
-        //     let i = 0;
-
-        //     let f_xl: number = this.f_function(xl, convert_formula);
-        //     let f_xr: number = this.f_function(xr, convert_formula);
-        //     let xm: number = xr - (f_xr * (xl - xr)) / (f_xl - f_xr);
-
-        //     while (true) {
-        //       let f_xm: number = this.f_function(xm, convert_formula);
-        //       this.result_logs +=
-        //         `Iteration Loop ${i}: xl=${xl.toFixed(
-        //           decimal_point
-        //         )} f_xr=${f_xr.toFixed(decimal_point)} xr=${xr.toFixed(
-        //           decimal_point
-        //         )} f_xl=${f_xl.toFixed(decimal_point)}` + '\n';
-        //       this.result_logs +=
-        //         `Iteration Result: ${xm.toFixed(
-        //           decimal_point
-        //         )} f(x)=${f_xm.toFixed(decimal_point)}` + '\n';
-        //       this.result_logs += `---------------------------------` + '\n';
-
-        //       let change = '';
-        //       if (f_xm == 0 || i > 300) {
-        //         this.result_answer.answer = f_xm.toFixed(decimal_point);
-        //         this.result_answer.bisection_table.push({
-        //           loop_count: i,
-        //           xl: xl.toFixed(decimal_point),
-        //           xr: xr.toFixed(decimal_point),
-        //           xm: xm.toFixed(decimal_point),
-        //           change: '-',
-        //         });
-        //         break;
-        //       } else if (f_xl * f_xm < 0) {
-        //         xr = xm;
-        //         f_xr = this.f_function(xr, convert_formula);
-        //         change = 'R ';
-        //       } else {
-        //         xl = xm;
-        //         f_xl = this.f_function(xl, convert_formula);
-        //         change = 'L ';
-        //       }
-
-        //       xm = xr - (f_xr * (xl - xr)) / (f_xl - f_xr);
-
-        //       this.result_answer.bisection_table.push({
-        //         loop_count: ++i,
-        //         xl: xl.toFixed(decimal_point),
-        //         xr: xr.toFixed(decimal_point),
-        //         xm: xm.toFixed(decimal_point),
-        //         change: change,
-        //       });
-        //       this.result_answer.total_loop++;
-        //     }
-        //   }
-        // }
-
         this.isLoad_calc = false;
       } catch (error) {
         // Error
@@ -513,12 +440,7 @@ export class BisectionComponent {
 
   f_function(x: number, convert_formula: any) {
     const { mode } = this.calc_form;
-    // if (mode == 'false_position') {
-    //   // IF รูปแบบสูตร
-    //   return x ** 4 - 13;
-    // } else {
     return eval(convert_formula) - x;
-    // }
   }
 
   clear_logs() {

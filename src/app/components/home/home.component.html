@@ -9,7 +9,7 @@
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
             <input type="text" pInputText placeholder="ค้นหา..." name="input_search_form" [(ngModel)]="input_search"
-              #input_search_form="ngModel" (keyup)="onSearch()" />
+              #input_search_form="ngModel" (input)="onSearch()" />
           </span>
         </div>
       </div>
