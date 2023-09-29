@@ -1,16 +1,52 @@
-<div class="grid">
+<div class="grid" style="color: #686868">
   <div class="col-12">
 
-    <!-- API Server Status Check -->
-    <p-card class="p-card-custom">
-      <div class="grid">
-        <div class="col-12" align="right">
-          สถานะ Server:
+    <!-- Search -->
+    <div class="col-12 mt-5" align="center">
+      <b>หาไม่เจอหรอ... ลองพิมพ์ตรงนี้ดูสิ...</b>
+      <div class="grid justify-content-center">
+        <div class="col-12 md:col-6">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="ค้นหา..." name="input_search_form" [(ngModel)]="input_search"
+              #input_search_form="ngModel" (keyup)="onSearch()" />
+          </span>
         </div>
       </div>
-    </p-card>
+    </div>
 
-    <!-- <h1>ไม่รู้หน้าแรกเอาไว้ทำไรดี ?</h1>
-    <h1>เอาเป็นว่าเลือกจากเมนูทางด้านซ้ายมือนะ</h1> -->
+    <!-- Menu -->
+    <ng-container *ngIf="menu_items_filter.length > 0">
+      <div class="col-12 mt-5" align="center" *ngFor="let item of menu_items_filter">
+        <h1>{{ item.label }}</h1>
+        <div class="grid justify-content-center">
+          <div class="col-12 md:col-4 lg:col-3 box" *ngFor="let subitem of item.items"
+            [routerLink]="subitem.routerLink">
+            <div class="box-inside flex align-items-center justify-content-center">
+              {{ subitem.label }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="menu_items_filter.length == 0 && input_search != ''">
+      <div class="col-12 mt-5" align="center" *ngIf="input_search != 'ป่าน'">
+        <h1>เสียใจด้วยย!... แต่เราหาสิ่งที่คุณอยากได้ไม่พบจริง ๆ</h1>
+      </div>
+      <div class="col-12 mt-5" align="center" *ngIf="input_search == 'ป่าน'">
+        <h1>ชอบ ๆ ๆ เธอที่สุดเลย!!! ไม่มีใครน่ารักกว่าเธออีกแล้ว!!!</h1>
+      </div>
+    </ng-container>
+
+
+    <!-- API Server Status Check -->
+    <div class="col-12 mt-3">
+      <div align="center">
+        <label style="font-size: 12pt;">สถานะเซิร์ฟเวอร์ API</label>
+        <i class="pi pi-circle-fill ml-2" style="font-size: 14px;color: #00b64c"></i>
+        <p style="font-size: 9pt;"><b>Node:</b> https://backup.wutthiphon.space/demo/Numerical/api</p>
+      </div>
+    </div>
+
   </div>
 </div>

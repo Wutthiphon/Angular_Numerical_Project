@@ -3,18 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
-// Material Modules
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import {
-  NgxMatDatetimePickerModule,
-  NgxMatTimepickerModule,
-  NgxMatNativeDateModule,
-} from '@angular-material-components/datetime-picker';
-import { MatButtonModule } from '@angular/material/button';
-
 // PrimeNG Modules
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
@@ -66,7 +54,6 @@ import { BlockUIModule } from 'primeng/blockui';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { PickListModule } from 'primeng/picklist';
@@ -114,15 +101,6 @@ import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-e
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    // Material Modules
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatNativeDateModule,
-    MatInputModule,
-    NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule,
-    MatButtonModule,
-    NgxMatNativeDateModule,
     // PrimeNG Modules
     MenubarModule,
     ButtonModule,
@@ -172,7 +150,6 @@ import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-e
     VirtualScrollerModule,
     BlockUIModule,
     PanelMenuModule,
-    MatButtonToggleModule,
     MessagesModule,
     MessageModule,
     PickListModule,
@@ -185,7 +162,7 @@ import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-e
     TimelineModule,
     AvatarModule,
   ],
-  providers: [ConfirmationService, MessageService, MatDatepickerModule],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

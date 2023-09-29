@@ -36,6 +36,7 @@ h4,
 h5,
 h6 {
   font-family: $custom-font !important;
+  font-weight: bold !important;
 }
 
 .p-button:disabled {
@@ -189,22 +190,23 @@ footer {
 }
 
 .page-content-container {
-  padding: 100px 10px 10px 10px;
+  padding: 90px 10px 10px 10px;
   max-width: 1440px;
   margin: auto;
 }
 
 .navbar {
-  background-color: #ffffff;
+  position: fixed;
+  background-color: #0E4C59;
   font-size: 10pt;
   height: 80px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 4px;
   border-radius: 0px;
   border: none;
-  padding: 0;
+  padding: 10px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 520px) {
   /* Hide close button on mobile */
   .close-button {
     display: none;
@@ -223,7 +225,6 @@ footer {
   .navbar {
     padding-left: 260px;
     padding-right: 260px;
-    position: fixed;
     width: 100%;
     z-index: 100;
   }
@@ -239,12 +240,18 @@ footer {
   .show-mobile {
     display: none;
   }
-  // .page-content-container {
-  //   margin-left: 250px;
-  // }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (min-width: 520px) and (max-width: 1180px) {
+  .navbar {
+    padding-left: 100px;
+    padding-right: 100px;
+    width: 100%;
+    z-index: 100;
+  }
+}
+
+@media screen and (max-width: 1181px) {
   /* Show dialog aside on mobile */
   .aside-container {
     position: fixed;
@@ -290,10 +297,10 @@ footer {
   .aside-container.open .aside-content {
     background-color: rgb(255, 255, 255);
   }
-  // .navbar {
-  //   width: 100%;
-  //   z-index: 100;
-  // }
+  .navbar {
+    width: 100%;
+    z-index: 100;
+  }
   .hide-mobile {
     display: none;
   }
@@ -312,18 +319,12 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #AC3520;
+  background: #248a9e;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8f2c1b;
-}
-
-// Material
-mat-form-field {
-  width: 100% !important;
-  font-family: $custom-font;
+  background: #176b7c;
 }
 
 .cdk-overlay-container {
@@ -370,7 +371,6 @@ mat-form-field {
 .panelMenu-custom {
   .select-menu.active .p-menuitem-link-active {
     border-radius: 8px;
-    // background-color: #F77100 !important;
     background: linear-gradient(
       -124deg,
       rgba(247, 113, 0, 1) 0%,
@@ -414,39 +414,5 @@ mat-form-field {
   }
   .p-panelmenu-panel .p-panelmenu-header-link .p-menuitem-text {
     flex-grow: 1;
-  }
-}
-
-@-webkit-keyframes AnimationName {
-  0% {
-    background-position: 9% 0%;
-  }
-  50% {
-    background-position: 92% 100%;
-  }
-  100% {
-    background-position: 9% 0%;
-  }
-}
-@-moz-keyframes AnimationName {
-  0% {
-    background-position: 9% 0%;
-  }
-  50% {
-    background-position: 92% 100%;
-  }
-  100% {
-    background-position: 9% 0%;
-  }
-}
-@keyframes AnimationName {
-  0% {
-    background-position: 9% 0%;
-  }
-  50% {
-    background-position: 92% 100%;
-  }
-  100% {
-    background-position: 9% 0%;
   }
 }

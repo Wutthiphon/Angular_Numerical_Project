@@ -1,4 +1,22 @@
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
+.box {
+  padding: 10px;
+}
+
+.box-inside {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: all 0.3s ease-in-out;
+  min-height: 80px;
+}
+
+.box-inside:hover {
+  padding: 10px;
+  background-color: #0E4C59;
+  color: #ffffff;
+  border-radius: 5px;
+  box-shadow: rgba(80, 86, 92, 0.5) 0px 8px 24px;
+  min-height: 80px;
+  cursor: pointer;
 }
