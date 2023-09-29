@@ -1,64 +1,32 @@
 <div class="main-container">
-  <div class="aside-container" [ngClass]="{'open': sidebarVisible}"
-    [style]="{'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}">
-    <div class="aside-content">
-      <div class="header">
-        <div class="col-12" style="text-align: right;">
-          <p-button icon="pi pi-times" styleClass="p-button-text p-button-rounded p-button-sm close-button"
-            id="hideAside" (click)="toggleAside()" [style]="{color: '#ff9300'}"></p-button>
-        </div>
-
-        <div class="col-12" align="center">
-          <h1 style="color: #646464">
-            <b style="font-size: 32pt;color: #f38621">N</b><b>umerical</b>
-            Method<br>
-            Calculator Project
-          </h1>
-        </div>
-
-        <div class="col-12">
-          <p-panelMenu [model]="aside_items" [style]="{width: '100%',border: 'none'}" styleClass="panelMenu-custom">
-          </p-panelMenu>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <p-menubar [style]="{'border-radius' : 0,border: 'none','box-shadow': 'rgba(0, 0, 0, 0.24) 0px 1px 4px'}"
+  <p-menubar
     styleClass="navbar">
     <ng-template pTemplate="start">
       <div class="flex align-content-center flex-wrap">
-        <div style="font-size: 12pt;color: #FFF;" class="flex align-items-center">
-          <p-button icon="pi pi-bars" styleClass="p-button-text p-button-sm hamburger-button" id="hideAside"
-            [style]="{color: '#FFF'}" (click)="toggleAside()"></p-button>
-          <b>ยันต์กัน F - Numerical Project</b>
+        <div style="color: #db6c59;font-size: 15pt;" align="center">
+          <b style="font-size: 28pt;color: #AC3520">N</b><b>UMERICAL</b>
+          METHOD<br>
+          <label style="font-size: 10pt;color: rgb(73, 73, 73);">CALCULATOR PROJECT</label>
         </div>
       </div>
-      <div style="font-size: 12pt;color: #FFF;">
-        <label class="hide-mobile">Dev. By Wutthiphon Tassana</label>
-      </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <i class="pi pi-circle-fill ml-2" style="font-size: 12px;color: #F2811D"></i>
+      <i class="pi pi-circle-fill ml-2" style="font-size: 12px;color: #F23838"></i>
+      <i class="pi pi-circle-fill ml-2" style="font-size: 12px;color: #0E4C59"></i>
+      <i class="pi pi-circle-fill ml-2" style="font-size: 12px;color: #acadf2"></i>
+      <i class="pi pi-circle-fill ml-2" style="font-size: 12px;color: #AC3520"></i>
     </ng-template>
   </p-menubar>
 </div>
 
-<p-confirmDialog [style]="{width: '600px'}" #confirmDialog>
-  <ng-template pTemplate="footer">
-    <div class="ui-dialog-buttonpane p-clearfix">
-      <button type="button" pButton icon="pi pi-times" label="ยกเลิก" (click)="confirmDialog.reject()"
-        class="p-button-danger p-button-rounded" style="margin-right: .25em"></button>
-      <button type="button" pButton icon="pi pi-check" label="ใช่" (click)="confirmDialog.accept()"
-        class="p-button-primary p-button-rounded" style="margin-right: .25em"></button>
-    </div>
-  </ng-template>
-</p-confirmDialog>
-
 <div class="page-content-container">
   <router-outlet></router-outlet>
 
-  <div class="grid">
-    <div class="col-12" align="center" style="color: #8b8b8b;">
+  <div class="grid mt-5">
+    <div class="col-12" align="center" style="color: #8f8f8f;">
       <b>Copyright &copy; 2023 </b>
-      <a href="https://wutthiphon.space" target="_blank" style="color: #8b8b8b">Wutthiphon Projects</a>
+      <a href="https://wutthiphon.space" target="_blank" style="color: #a3a3a3">Wutthiphon Projects</a>
     </div>
   </div>
 </div>
