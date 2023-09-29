@@ -37,6 +37,7 @@ h5,
 h6 {
   font-family: $custom-font !important;
   font-weight: bold !important;
+  color: #495057;
 }
 
 .p-button:disabled {
@@ -197,7 +198,7 @@ footer {
 
 .navbar {
   position: fixed;
-  background-color: #0E4C59;
+  background-color: #0e4c59;
   font-size: 10pt;
   height: 80px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 4px;
