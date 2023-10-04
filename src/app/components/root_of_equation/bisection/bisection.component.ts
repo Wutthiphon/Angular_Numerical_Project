@@ -23,9 +23,7 @@ export class BisectionComponent {
     convert_formula: '',
     html_formula_replace: '',
     convert_formula_replace: '',
-    known: { x: true },
     range: {
-      x: { min: 0, max: 10 },
       root: { min: 0.02, max: 0.03 },
     },
     input_array: [],
@@ -42,6 +40,29 @@ export class BisectionComponent {
     bisection_table: Array<any>(),
     total_loop: 0,
   };
+
+  chart_options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          family: 'Kanit',
+        },
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            zeroLineWidth: 3,
+            zeroLineColor: '#2C292E',
+          },
+        },
+      ],
+    },
+  };
+  chart1_data: any;
 
   constructor(private messageService: MessageService) {}
 
@@ -194,7 +215,10 @@ export class BisectionComponent {
               });
             }
 
-            if (convert_formula_replace == null || convert_formula_replace == '') {
+            if (
+              convert_formula_replace == null ||
+              convert_formula_replace == ''
+            ) {
               error++;
               this.messageService.add({
                 severity: 'error',
@@ -345,6 +369,23 @@ export class BisectionComponent {
           }
         }
 
+        this.chart1_data = {
+          labels: this.result_answer.bisection_table.map(
+            (item: any) => item.loop_count
+          ),
+          datasets: [
+            {
+              label: 'Xm',
+              data: this.result_answer.bisection_table.map(
+                (item: any) => item.xm
+              ),
+              borderColor: '#42A5F5',
+              fill: false,
+              tension: 0.1,
+            },
+          ],
+        };
+
         this.isLoad_calc = false;
       } catch (error) {
         // Error
@@ -386,9 +427,7 @@ export class BisectionComponent {
       convert_formula: '',
       html_formula_replace: '',
       convert_formula_replace: '',
-      known: { x: true },
       range: {
-        x: { min: 0, max: 10 },
         root: { min: 0.02, max: 0.03 },
       },
       input_array: [],
