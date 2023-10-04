@@ -65,6 +65,7 @@ import { DividerModule } from 'primeng/divider';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TimelineModule } from 'primeng/timeline';
 import { AvatarModule } from 'primeng/avatar';
+import { ChartModule } from 'primeng/chart';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -161,6 +162,7 @@ import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-e
     SelectButtonModule,
     TimelineModule,
     AvatarModule,
+    ChartModule,
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent],

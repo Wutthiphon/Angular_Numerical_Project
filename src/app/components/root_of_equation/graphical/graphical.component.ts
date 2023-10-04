@@ -18,6 +18,7 @@ export class GraphicalComponent {
     convert_formula: '',
     range: {
       x: { min: 0, max: 10 },
+      x_near: { min: 0, max: 0 },
     },
   };
 
@@ -27,6 +28,30 @@ export class GraphicalComponent {
     bisection_table: Array<any>(),
     total_loop: 0,
   };
+
+  chart_options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          family: 'Kanit',
+        },
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            zeroLineWidth: 3,
+            zeroLineColor: '#2C292E',
+          },
+        },
+      ],
+    },
+  };
+  chart1_data: any;
+  chart2_data: any;
 
   constructor(private messageService: MessageService) {}
 
@@ -52,35 +77,6 @@ export class GraphicalComponent {
     let html_formula = '';
     let convert_formula = '';
     const { formula } = this.calc_form;
-
-    // // If formula have space remove space
-    // if (formula.includes(' ')) {
-    //   html_formula = formula.replace(/\s/g, '');
-    //   convert_formula = formula.replace(/\s/g, '');
-    // }
-
-    // // // If formula have ^ replace to **
-    // if (formula.includes('^(')) {
-    //   html_formula = formula.replace(/\^/g, '<sup>');
-    //   convert_formula = formula.replace(/\^/g, '**');
-
-    //   // If formula have ) replace to </sup>
-    //   if (formula.includes(')')) {
-    //     html_formula = html_formula.replace(/\)/g, ')</sup>');
-    //   }
-    // }
-
-    // // // If formula have sqrt replace to Math.sqrt
-    // if (formula.includes('sqrt')) {
-    //   html_formula = formula.replace(/sqrt/g, '√');
-    //   convert_formula = formula.replace(/sqrt/g, 'Math.sqrt');
-    // }
-
-    // // // If formula have e replace to Math.E
-    // if (formula.includes('e')) {
-    //   html_formula = formula.replace(/e/g, 'e');
-    //   convert_formula = formula.replace(/e/g, 'Math.E');
-    // }
 
     formula.split('').forEach((element: any, index: number) => {
       // If found space remove space
@@ -126,6 +122,12 @@ export class GraphicalComponent {
         convert_formula += element;
       }
     });
+
+    // // If formula have sqrt replace to Math.sqrt
+    if (formula.includes('sqrt')) {
+      html_formula = formula.replace(/sqrt/g, '√');
+      convert_formula = formula.replace(/sqrt/g, 'Math.sqrt');
+    }
 
     this.calc_form.html_formula = html_formula;
     this.calc_form.convert_formula = convert_formula;
@@ -175,6 +177,8 @@ export class GraphicalComponent {
 
         // if error == 0 do fomula
         if (error == 0) {
+          let chart1_label = [];
+          let chart1_data = [];
           for (let x = range.x.min; x <= range.x.max; x++) {
             // Replace x to value
             let replace_x = convert_formula.replace(/x/g, x.toString());
@@ -189,6 +193,11 @@ export class GraphicalComponent {
             this.result_logs +=
               x_formula + '=' + x_answer + '; ans= ' + answer + '\n';
 
+            // Push to chart1
+            chart1_label.push(x);
+            chart1_data.push(answer);
+
+            // Find near x min / max
             if (x == range.x.min) {
               near_x_lower = answer;
               near_x_upper = x_answer;
@@ -204,7 +213,21 @@ export class GraphicalComponent {
             }
             this.result_answer.total_loop++;
           }
-          near_x_upper_get = false;
+
+          // Chart 1
+          this.chart1_data = {
+            labels: chart1_label,
+            datasets: [
+              {
+                label: 'X',
+                data: chart1_data.map((x: number) => x.toFixed(decimal_point)),
+              },
+              {
+                label: '0',
+                data: chart1_data.map((x: number) => 0),
+              },
+            ],
+          };
 
           this.result_logs +=
             'Loop 1 Result: ' +
@@ -213,6 +236,9 @@ export class GraphicalComponent {
             near_x_upper.toFixed(decimal_point) +
             '\n';
 
+          this.calc_form.range.x_near.min = near_x_lower.toFixed(decimal_point);
+          this.calc_form.range.x_near.max = near_x_upper.toFixed(decimal_point);
+          let near_x_data = [];
           for (let x = near_x_lower; x < near_x_upper; x = x + 0.000001) {
             let replace_x = convert_formula.replace(
               /x/g,
@@ -231,10 +257,47 @@ export class GraphicalComponent {
               '; ans= ' +
               answer.toFixed(decimal_point) +
               '\n';
+            near_x_data.push(answer);
 
-            if (answer == x_answer || answer > x_answer) {
+            if (answer >= x_answer) {
+              // End Loop
               this.result_logs += 'Answer X = : ' + x.toFixed(decimal_point);
               this.result_answer.answer = x.toFixed(decimal_point);
+
+              // Chart 2
+              let near_x_data_loop_count = near_x_data.length;
+              let chart2_label = [];
+              let chart2_data = [];
+              if (near_x_data_loop_count > 20) {
+                for (let x = 0; x < 20; x++) {
+                  let index = Math.floor(near_x_data_loop_count / 20) * x;
+                  chart2_label.push(index);
+                  chart2_data.push(near_x_data[index]);
+                }
+                chart2_label.push(near_x_data_loop_count);
+                chart2_data.push(answer);
+              } else {
+                for (let x = 0; x < near_x_data_loop_count; x++) {
+                  chart2_label.push(x);
+                  chart2_data.push(near_x_data[x]);
+                }
+              }
+              this.chart2_data = {
+                labels: chart2_label,
+                datasets: [
+                  {
+                    label: 'X',
+                    data: chart2_data.map((x: number) =>
+                      x.toFixed(decimal_point)
+                    ),
+                  },
+                  {
+                    label: '0',
+                    data: chart2_data.map((x: number) => 0),
+                  },
+                ],
+              };
+
               break;
             }
             this.result_answer.total_loop++;
@@ -243,6 +306,11 @@ export class GraphicalComponent {
         this.isLoad_calc = false;
       } catch (error) {
         // Error
+        this.result_answer = {
+          answer: '',
+          bisection_table: Array<any>(),
+          total_loop: 0,
+        };
         this.isLoad_calc = false;
         this.messageService.add({
           severity: 'error',

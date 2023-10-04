@@ -1,6 +1,11 @@
 <div class="grid">
+  <div class="col-12" align="center">
+    <h1>BISECTION METHOD</h1>
+    <p-divider></p-divider>
+  </div>
+
   <div class="col-12 md:col-5">
-    <p-card header="สมการและการแทนค่า" styleClass="h-full">
+    <p-card header="สมการและการแทนค่า">
       <div class="grid">
         <div class="col-12 flex align-content-center mb-4">
           <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
@@ -23,7 +28,7 @@
           <input type="text" pInputText [(ngModel)]="calc_form.formula" name="calc_form_formula"
             #calc_form_formula="ngModel" placeholder="สมการ..." (input)="readFormula()" />
         </div>
-        <div class="col-12 mb-4">
+        <div class="col-12 mb-4" *ngIf="calc_form.mode == 'sample_var'">
           <b>ฟังก์ชันเบื้องต้น</b>
           <div class="row">
             <p-button styleClass="p-button-sm mr-1" (onClick)="addFunctionFormula('root_x')">
@@ -43,25 +48,6 @@
           <b>*หลังแปลงสมการ: </b>
           <label [innerHTML]="calc_form.convert_formula" *ngIf="calc_form.convert_formula != ''"></label>
           <label *ngIf="calc_form.convert_formula == ''">รอการใส่สมการ</label>
-        </div>
-
-        <div class="col-12 flex align-content-center" *ngIf="calc_form.mode == 'find_x'">
-          <b class="mr-2 mt-1">ไม่ทราบ X อยู่ในช่วง</b>
-          <p-inputSwitch [(ngModel)]="calc_form.known.x" binary="true" onLabel="เปิด" offLabel="ปิด"
-            [disabled]="true"></p-inputSwitch>
-          <b class="ml-2 mt-1">ทราบ X อยู่ในช่วง</b>
-        </div>
-        <div class="col-12" *ngIf="calc_form.mode == 'find_x' && calc_form.known.x">
-          <b>X มากกว่า</b>
-          <p-inputNumber [(ngModel)]="calc_form.range.x.min" mode="decimal" placeholder="ช่วงของ X..."
-            [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
-          </p-inputNumber>
-        </div>
-        <div class="col-12" *ngIf="calc_form.mode == 'find_x' && calc_form.known.x">
-          <b>น้อยกว่า</b>
-          <p-inputNumber [(ngModel)]="calc_form.range.x.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
-            [minFractionDigits]="2" [useGrouping]="false">
-          </p-inputNumber>
         </div>
 
         <div class="col-12" *ngIf="calc_form.input_array.length > 0 && calc_form.mode == 'sample_var'">
@@ -85,7 +71,7 @@
           </p-table>
         </div>
 
-        <div class="col-12" *ngIf="calc_form.input_array.length > 0 && calc_form.mode == 'sample_var' && debug_mode">
+        <div class="col-12" *ngIf="calc_form.mode == 'sample_var' && debug_mode">
           <b>*แทนค่าสมการอ่านได้: </b>
           <label [innerHTML]="calc_form.html_formula_replace" *ngIf="calc_form.html_formula_replace != ''"></label>
           <label *ngIf="calc_form.html_formula_replace == ''">รอการแทนค่า</label>
@@ -119,7 +105,7 @@
         </div>
 
         <div class="col-12" align="right">
-          <button pButton type="button" label="Reset" icon="pi pi-trash" (click)="reset()"
+          <button pButton type="button" label="Reset" icon="pi pi-times" (click)="reset()"
             class="p-button-outlined p-button-rounded p-button-sm mr-2"></button>
           <button pButton type="button" label="คำนวณ" icon="pi pi-calculator" (click)="calculate()"
             [disabled]="calc_form.formula == ''" class="p-button-rounded p-button-sm"></button>
@@ -137,10 +123,17 @@
             class="p-button-sm"></button>
         </div>
 
+        <div class="col-12">
+          <b>คำตอบ:</b>
+          {{ result_answer.answer || 'ยังไม่มีการคำนวณ' }}
+          <br>
+          <b>จำนวนการ Loop:</b>
+          {{ result_answer.total_loop + ' ครั้ง' || 'ยังไม่มีการ Loop' }}
+        </div>
         <div class="col-12"
           *ngIf="(calc_form.mode == 'bisection' || calc_form.mode == 'false_position' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')) && result_answer.answer">
           <b>ตารางการคำนวณ</b>
-          <p-table [value]="result_answer.bisection_table" [tableStyle]="{ 'min-width': '50rem' }">
+          <p-table [value]="result_answer.bisection_table">
             <ng-template pTemplate="header">
               <tr>
                 <th>ครั้งที่</th>
@@ -161,18 +154,11 @@
             </ng-template>
           </p-table>
         </div>
-        <div class="col-12">
-          <b>คำตอบ:</b>
-          {{ result_answer.answer || 'ยังไม่มีการคำนวณ' }}
-          <br>
-          <b>จำนวนการ Loop:</b>
-          {{ result_answer.total_loop + ' ครั้ง' || 'ยังไม่มีการ Loop' }}
-        </div>
       </div>
     </p-card>
   </div>
   <!-- <div class="col-12 md:col-12">
-    <p-card header="กราฟ" styleClass="h-full">
+    <p-card header="กราฟ">
       <div class="grid">
         <div class="col-12">
           Test

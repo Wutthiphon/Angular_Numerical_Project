@@ -5,7 +5,7 @@
   </div>
 
   <div class="col-12 md:col-6 lg:col-5">
-    <p-card header="สมการและการแทนค่า" styleClass="h-full">
+    <p-card header="สมการและการแทนค่า">
       <div class="grid">
         <div class="col-12 flex align-content-center mb-4">
           <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
@@ -77,15 +77,20 @@
       </div>
     </p-card>
   </div>
-  <!-- <div class="col-12 md:col-12">
-    <p-card header="กราฟ" styleClass="h-full">
+  <div class="col-12" *ngIf="result_answer.answer">
+    <p-card header="กราฟ">
       <div class="grid">
-        <div class="col-12">
-          Test
+        <div class="col-12 lg:col-6" align="center">
+          <h4>ช่วงของ X Loop ครั้งที่ 1 ({{ calc_form.range.x.min }} - {{ calc_form.range.x.max }})</h4>
+          <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart>
+        </div>
+        <div class="col-12 lg:col-6" align="center">
+          <h4>ช่วงของ X Loop ครั้งที่ 2 ({{ calc_form.range.x_near.min }} - {{ calc_form.range.x_near.max }})</h4>
+          <p-chart type="line" [data]="chart2_data" [options]="chart_options"></p-chart>
         </div>
       </div>
     </p-card>
-  </div> -->
+  </div>
 </div>
 
 <p-toast></p-toast>
