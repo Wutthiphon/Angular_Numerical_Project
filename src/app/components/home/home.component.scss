@@ -11,6 +11,7 @@
   min-height: 80px;
   z-index: 1;
   position: relative;
+  cursor: pointer;
 }
 
 .box-inside:after {
@@ -27,7 +28,6 @@
   );
   border-radius: 5px;
   box-shadow: rgba(80, 86, 92, 0.5) 0px 8px 24px;
-  cursor: pointer;
   transition: all 0.3s ease-in-out;
   z-index: 2;
   opacity: 0;
