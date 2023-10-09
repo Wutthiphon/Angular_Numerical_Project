@@ -46,48 +46,85 @@ export class AppComponent implements OnInit {
         },
       ],
     },
-    // {
-    //   label: 'Linear Algebraic Equations',
-    //   icon: 'fas fa-chart-line',
-    //   items: [
-    //     {
-    //       label: 'Gauss Elimination',
-    //       icon: 'pi pi-circle',
-    //       expanded: true,
-    //     },
-    //     {
-    //       label: 'LU Decomposition & Matrix Inversion',
-    //       icon: 'pi pi-circle',
-    //       expanded: true,
-    //     },
-    //     {
-    //       label: 'Gauss Seidel',
-    //       icon: 'pi pi-calculator',
-    //       routerLink: '/linear_algebraic_equations/gradient/gauss_seidel',
-    //     },
-    //     {
-    //       label: 'Conjugate',
-    //       icon: 'pi pi-calculator',
-    //       routerLink: '/linear_algebraic_equations/gradient/conjugate',
-    //     },
-    //     // {
-    //     //   label: 'Newton Divide Difference',
-    //     //   icon: 'pi pi-calculator',
-    //     //   routerLink:
-    //     //     '/linear_algebraic_equations/interpolation/newton_divide_difference',
-    //     // },
-    //     // {
-    //     //   label: 'Lagrange',
-    //     //   icon: 'pi pi-calculator',
-    //     //   routerLink: '/linear_algebraic_equations/interpolation//lagrange',
-    //     // },
-    //     // {
-    //     //   label: 'Spline',
-    //     //   icon: 'pi pi-calculator',
-    //     //   routerLink: '/linear_algebraic_equations/interpolation//spline',
-    //     // },
-    //   ],
-    // },
+    {
+      label: 'Linear Algebraic Equations',
+      icon: 'fas fa-chart-line',
+      items: [
+        {
+          label: "Cramer's Rule",
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Gauss Elimination',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Gauss-Jordan',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Matrix Inversion',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'LU Decomposition',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Cholesky Decomposition',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Jacobi Iteration',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Gauss-Seidel Iteration',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Conjugate Gradient',
+          icon: 'pi pi-circle',
+        },
+      ],
+    },
+    {
+      label: 'Interpolation & Extrapolation',
+      icon: 'fas fa-chart-line',
+      items: [
+        {
+          label: 'Newton Divide Difference',
+          icon: 'pi pi-circle',
+          routerLink: '/interpolation_and_extrapolation/newton_divide_difference',
+        },
+        {
+          label: 'Lagrange',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Spline',
+          icon: 'pi pi-circle',
+        },
+      ],
+    },
+    {
+      label: 'Least Squares Regression',
+      icon: 'fas fa-chart-line',
+      items: [
+        {
+          label: 'Linear',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Polynomial',
+          icon: 'pi pi-circle',
+        },
+        {
+          label: 'Multiple Linear',
+          icon: 'pi pi-circle',
+        },
+      ],
+    },
   ];
 
   constructor(private router: Router) {}

@@ -9,14 +9,45 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   transition: all 0.3s ease-in-out;
   min-height: 80px;
+  z-index: 1;
+  position: relative;
 }
 
-.box-inside:hover {
-  padding: 10px;
-  background-color: #0E4C59;
-  color: #ffffff;
+.box-inside:after {
+  position: absolute;
+  margin: 10px;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-color: #0e4c59;
+  background: linear-gradient(
+    38deg,
+    rgba(14, 76, 89, 1) 0%,
+    rgb(22, 105, 94) 24%,
+    rgba(23, 94, 108, 1) 100%
+  );
   border-radius: 5px;
   box-shadow: rgba(80, 86, 92, 0.5) 0px 8px 24px;
   min-height: 80px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  z-index: 2;
+  opacity: 0;
+}
+
+.box-inside:hover:after {
+  opacity: 1;
+}
+
+.box-inside label {
+  transition: all 0.4s ease-in-out;
+  position: relative;
+  z-index: 3;
+}
+
+.box-inside:hover label {
+  color: white;
+  position: relative;
+  font-size: 14pt;
+  z-index: 3;
 }

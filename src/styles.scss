@@ -351,7 +351,7 @@ footer {
 }
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
-  background-color: #a81c00 !important;
+  background-color: #176b7c !important;
   color: rgb(255, 255, 255) !important;
   border-radius: 0px;
 }
@@ -368,53 +368,4 @@ footer {
 
 *:focus {
   box-shadow: none !important;
-}
-
-.panelMenu-custom {
-  .select-menu.active .p-menuitem-link-active {
-    border-radius: 8px;
-    background: linear-gradient(
-      -124deg,
-      rgba(247, 113, 0, 1) 0%,
-      rgba(247, 172, 0, 1) 100%
-    ) !important;
-  }
-
-  .select-menu.active .p-menuitem-link-active:hover {
-    background: linear-gradient(
-      124deg,
-      rgba(247, 113, 0, 1) 0%,
-      rgba(247, 172, 0, 1) 100%
-    ) !important;
-  }
-
-  .p-panelmenu-panel .p-panelmenu-header-link {
-    background-color: #fff;
-    border: none;
-    min-height: 45px;
-    padding: 4px 10px;
-  }
-
-  .p-panelmenu-panel .p-highlight .p-panelmenu-header-link {
-    background-color: #fff;
-  }
-
-  .p-panelmenu-panel .p-highlight .p-panelmenu-header-link {
-    border-radius: 6px;
-  }
-
-  .p-panelmenu-panel .p-panelmenu-content {
-    border: none;
-  }
-
-  .p-panelmenu-panel .p-menuitem-link:hover {
-    border-radius: 8px;
-  }
-
-  .p-panelmenu-panel .p-panelmenu-header-link .p-icon-wrapper {
-    order: 1;
-  }
-  .p-panelmenu-panel .p-panelmenu-header-link .p-menuitem-text {
-    flex-grow: 1;
-  }
 }

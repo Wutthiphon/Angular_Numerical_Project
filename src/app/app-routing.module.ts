@@ -11,7 +11,7 @@ import { NewtonRaphsonComponent } from './components/root_of_equation/newton-rap
 import { SecantComponent } from './components/root_of_equation/secant/secant.component';
 // Linear Algebraic Equations
 // Interpolation
-import { NewtonDivideDifferenceComponent } from './components/linear-algebraic-equations/interpolation/newton-divide-difference/newton-divide-difference.component';
+import { NewtonDivideDifferenceComponent } from './components/interpolation_and_extrapolation/newton-divide-difference/newton-divide-difference.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,7 +34,7 @@ const routes: Routes = [
   // Linear Algebraic Equations
   // Interpolation
   {
-    path: 'linear_algebraic_equations/interpolation/newton_divide_difference',
+    path: 'interpolation_and_extrapolation/newton_divide_difference',
     component: NewtonDivideDifferenceComponent,
   },
 ];
