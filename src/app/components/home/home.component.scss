@@ -38,6 +38,7 @@
 }
 
 .box-inside label {
+  color: #686868;
   transition: all 0.4s ease-in-out;
   position: relative;
   z-index: 3;
@@ -48,4 +49,8 @@
   position: relative;
   font-size: 14pt;
   z-index: 3;
+}
+
+b {
+  color: #686868;
 }

@@ -1,8 +1,8 @@
-<div class="grid" style="color: #686868">
+<div class="grid">
   <div class="col-12">
 
     <!-- Search -->
-    <div class="col-12 mt-5" align="center">
+    <div class="col-12" align="center" style="margin: 50px 0px;">
       <b>หาไม่เจอหรอ... ลองพิมพ์ตรงนี้ดูสิ...</b>
       <div class="grid justify-content-center">
         <div class="col-12 md:col-6">
@@ -17,7 +17,7 @@
 
     <!-- Menu -->
     <ng-container *ngIf="menu_items_filter.length > 0">
-      <div class="col-12 mt-5" align="center" *ngFor="let item of menu_items_filter">
+      <div class="col-12" align="center" *ngFor="let item of menu_items_filter">
         <h1>{{ item.label }}</h1>
         <div class="grid justify-content-center">
           <div class="col-12 md:col-4 lg:col-3 box" *ngFor="let subitem of item.items"
@@ -37,16 +37,5 @@
         <h1>คนน่ารัก...</h1>
       </div>
     </ng-container>
-
-
-    <!-- API Server Status Check -->
-    <div class="col-12 mt-3">
-      <div align="center">
-        <label style="font-size: 12pt;">สถานะเซิร์ฟเวอร์ API</label>
-        <i class="pi pi-circle-fill ml-2" style="font-size: 14px;color: #00b64c"></i>
-        <p style="font-size: 9pt;"><b>API:</b> https://projects.kmutnb.wutthiphon.space/Numerical/api</p>
-      </div>
-    </div>
-
   </div>
 </div>
