@@ -79,9 +79,23 @@ import { OnePointIterationComponent } from './components/root_of_equation/one-po
 import { NewtonRaphsonComponent } from './components/root_of_equation/newton-raphson/newton-raphson.component';
 import { SecantComponent } from './components/root_of_equation/secant/secant.component';
 // Linear Algebraic Equations
-// Interpolation
+import { CramerComponent } from './components/linear_algebraic_equations/cramer/cramer.component';
+import { GaussEliminationComponent } from './components/linear_algebraic_equations/gauss-elimination/gauss-elimination.component';
+import { GaussJordanComponent } from './components/linear_algebraic_equations/gauss-jordan/gauss-jordan.component';
+import { MatrixInversionComponent } from './components/linear_algebraic_equations/matrix-inversion/matrix-inversion.component';
+import { LuDecompositionComponent } from './components/linear_algebraic_equations/lu-decomposition/lu-decomposition.component';
+import { CholeskyDecompositionComponent } from './components/linear_algebraic_equations/cholesky-decomposition/cholesky-decomposition.component';
+import { JacobiIterationComponent } from './components/linear_algebraic_equations/jacobi-iteration/jacobi-iteration.component';
+import { GaussSeidelIterationComponent } from './components/linear_algebraic_equations/gauss-seidel-iteration/gauss-seidel-iteration.component';
+import { ConjugateGradientComponent } from './components/linear_algebraic_equations/conjugate-gradient/conjugate-gradient.component';
+// Interpolation & Extrapolation
 import { NewtonDivideDifferenceComponent } from './components/interpolation_and_extrapolation/newton-divide-difference/newton-divide-difference.component';
-
+import { LagrangeComponent } from './components/interpolation_and_extrapolation/lagrange/lagrange.component';
+import { SplineComponent } from './components/interpolation_and_extrapolation/spline/spline.component';
+// Least Squares Regression
+import { LinearComponent } from './components/least_squares_regression/linear/linear.component';
+import { PolynomialComponent } from './components/least_squares_regression/polynomial/polynomial.component';
+import { MultipleLinearComponent } from './components/least_squares_regression/multiple-linear/multiple-linear.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,8 +108,23 @@ import { NewtonDivideDifferenceComponent } from './components/interpolation_and_
     NewtonRaphsonComponent,
     SecantComponent,
     // Linear Algebraic Equations
-    // Interpolation
+    CramerComponent,
+    GaussEliminationComponent,
+    GaussJordanComponent,
+    MatrixInversionComponent,
+    LuDecompositionComponent,
+    CholeskyDecompositionComponent,
+    JacobiIterationComponent,
+    GaussSeidelIterationComponent,
+    ConjugateGradientComponent,
+    // Interpolation & Extrapolation
     NewtonDivideDifferenceComponent,
+    LagrangeComponent,
+    SplineComponent,
+    // Least Squares Regression
+    LinearComponent,
+    PolynomialComponent,
+    MultipleLinearComponent,
   ],
   imports: [
     BrowserModule,

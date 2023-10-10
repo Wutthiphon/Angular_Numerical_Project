@@ -53,38 +53,47 @@ export class AppComponent implements OnInit {
         {
           label: "Cramer's Rule",
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/cramer',
         },
         {
           label: 'Gauss Elimination',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/gauss_elimination',
         },
         {
           label: 'Gauss-Jordan',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/gauss_jordan',
         },
         {
           label: 'Matrix Inversion',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/matrix_inversion',
         },
         {
           label: 'LU Decomposition',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/lu_decomposition',
         },
         {
           label: 'Cholesky Decomposition',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/cholesky_decomposition',
         },
         {
           label: 'Jacobi Iteration',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/jacobi_iteration',
         },
         {
           label: 'Gauss-Seidel Iteration',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/gauss_seidel_iteration',
         },
         {
           label: 'Conjugate Gradient',
           icon: 'pi pi-circle',
+          routerLink: '/linear_algebraic_equations/conjugate_gradient',
         },
       ],
     },
@@ -95,15 +104,18 @@ export class AppComponent implements OnInit {
         {
           label: 'Newton Divide Difference',
           icon: 'pi pi-circle',
-          routerLink: '/interpolation_and_extrapolation/newton_divide_difference',
+          routerLink:
+            '/interpolation_and_extrapolation/newton_divide_difference',
         },
         {
           label: 'Lagrange',
           icon: 'pi pi-circle',
+          routerLink: '/interpolation_and_extrapolation/lagrange',
         },
         {
           label: 'Spline',
           icon: 'pi pi-circle',
+          routerLink: '/interpolation_and_extrapolation/spline',
         },
       ],
     },
@@ -114,14 +126,17 @@ export class AppComponent implements OnInit {
         {
           label: 'Linear',
           icon: 'pi pi-circle',
+          routerLink: '/least_squares_regression/linear',
         },
         {
           label: 'Polynomial',
           icon: 'pi pi-circle',
+          routerLink: '/least_squares_regression/polynomial',
         },
         {
           label: 'Multiple Linear',
           icon: 'pi pi-circle',
+          routerLink: '/least_squares_regression/multiple_linear',
         },
       ],
     },
