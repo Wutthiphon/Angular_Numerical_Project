@@ -1,0 +1,149 @@
+<div class="grid">
+  <div class="col-12" align="center">
+    <h1>TRAPEZOIDAL RULE</h1>
+    <p-divider></p-divider>
+  </div>
+
+  <div class="col-12 md:col-5">
+    <p-card header="สมการและการแทนค่า">
+      <div class="grid">
+        <div class="col-12 flex align-content-center mb-4">
+          <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
+          <b class="ml-2 mt-1">Debug Mode</b>
+        </div>
+        <div class="col-12 md:col-4">
+          <b>ตำแหน่งทศนิยม</b>
+          <p-inputNumber [(ngModel)]="calc_form.decimal_point" mode="decimal" placeholder="6 .." styleClass="w-full"
+            [useGrouping]="false">
+          </p-inputNumber>
+        </div>
+        <div class="col-12 md:col-8">
+          <b>ค่าความผิดพลาด</b>
+          <p-inputNumber [(ngModel)]="calc_form.tolerance" mode="decimal" placeholder="6 .." styleClass="w-full"
+            [useGrouping]="false" [maxFractionDigits]="8">
+          </p-inputNumber>
+        </div>
+
+        <div class="col-12">
+          <b>สมการ: </b>
+          <input type="text" pInputText [(ngModel)]="calc_form.formula" name="calc_form_formula"
+            #calc_form_formula="ngModel" placeholder="สมการ..." (input)="readFormula()" />
+        </div>
+
+        <div class="col-12 md:col-6">
+          <b>X<sub>0</sub></b>
+          <p-inputNumber [(ngModel)]="calc_form.x0" mode="decimal" placeholder="x0 .." styleClass="w-full"
+            [useGrouping]="false" [maxFractionDigits]="8">
+          </p-inputNumber>
+        </div>
+        <div class="col-12 md:col-6">
+          <b>X<sub>1</sub></b>
+          <p-inputNumber [(ngModel)]="calc_form.x1" mode="decimal" placeholder="x1 .." styleClass="w-full"
+            [useGrouping]="false" [maxFractionDigits]="8">
+          </p-inputNumber>
+        </div>
+
+        <div class="col-12" *ngIf="debug_mode">
+          <b>*อ่านสมการได้: </b>
+          <label [innerHTML]="calc_form.html_formula" *ngIf="calc_form.html_formula != ''"></label>
+          <label *ngIf="calc_form.html_formula == ''">รอการใส่สมการ</label>
+
+          <br>
+          <b>*หลังแปลงสมการ: </b>
+          <label [innerHTML]="calc_form.convert_formula" *ngIf="calc_form.convert_formula != ''"></label>
+          <label *ngIf="calc_form.convert_formula == ''">รอการใส่สมการ</label>
+        </div>
+
+        <div class="col-12"
+          *ngIf="calc_form.mode == 'bisection' || calc_form.mode == 'false_position' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
+          <b>ช่วงของ Root เริ่มจาก</b>
+          <p-inputNumber [(ngModel)]="calc_form.range.root.min" mode="decimal" placeholder="ช่วงของ Root..."
+            [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
+          </p-inputNumber>
+        </div>
+        <div class="col-12"
+          *ngIf="calc_form.mode == 'bisection' || calc_form.mode == 'false_position' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
+          <b>ถึง</b>
+          <p-inputNumber [(ngModel)]="calc_form.range.root.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
+            [minFractionDigits]="2" [useGrouping]="false">
+          </p-inputNumber>
+        </div>
+
+        <div class="col-12" align="right">
+          <button pButton type="button" label="Reset" icon="pi pi-times" (click)="reset()"
+            class="p-button-outlined p-button-rounded p-button-sm mr-2"></button>
+          <button pButton type="button" label="คำนวณ" icon="pi pi-calculator" (click)="calculate()"
+            [disabled]="calc_form.formula == ''" class="p-button-rounded p-button-sm"></button>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  <div class="col-12 md:col-7">
+    <p-card header="คำตอบ" styleClass="h-full">
+      <div class="grid">
+        <div class="col-12" *ngIf="debug_mode">
+          <b>Logs:</b>
+          <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
+          <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
+            class="p-button-sm"></button>
+        </div>
+
+        <div class="col-12">
+          <b>คำตอบ:</b>
+          {{ result_answer.answer || 'ยังไม่มีการคำนวณ' }}
+          <br>
+          <b>จำนวนการ Loop:</b>
+          {{ result_answer.total_loop + ' ครั้ง' || 'ยังไม่มีการ Loop' }}
+        </div>
+        <div class="col-12" *ngIf="result_answer.answer">
+          <b>ตารางการคำนวณ</b>
+          <p-table [value]="result_answer.table" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            currentPageReportTemplate="แสดง {first} ถึง {last} จาก {totalRecords} รายการ"
+            [rowsPerPageOptions]="[10, 25, 50]">
+            <ng-template pTemplate="header">
+              <tr>
+                <!-- <th>ครั้งที่</th>
+                <th>X<sub>l</sub></th>
+                <th>X<sub>r</sub></th>
+                <th>X<sub>m</sub></th>
+                <th>ปรับ</th> -->
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-result>
+              <!-- <tr>
+                <td>{{ result.loop_count }}</td>
+                <td>{{ result.xl }}</td>
+                <td>{{ result.xr }}</td>
+                <td>{{ result.xm }}</td>
+                <td>{{ result.change }}</td>
+              </tr> -->
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  <div class="col-12 md:col-12" *ngIf="result_answer.answer">
+    <p-card header="กราฟ">
+      <div class="grid">
+        <div class="col-12" align="center">
+          <!-- <h4>ช่วงของ X Loop ครั้งที่ 1 ({{ calc_form.range.root.min.toFixed(calc_form.decimal_point) }} - {{
+            calc_form.range.root.max.toFixed(calc_form.decimal_point) }})</h4> -->
+          <!-- <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart> -->
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<p-toast></p-toast>
+
+<p-dialog header="กำลังประมวลผล..." [(visible)]="isLoad_calc" [modal]="true"
+  [style]="{ 'min-width': '360.5px',width: '30%' }" [draggable]="false" [resizable]="false" [closable]="false">
+  <div class="grid">
+    <div class="col-12 mt-2" align="center">
+      <p-progressSpinner [style]="{ 'width': '75px', 'height': '75px' }" strokeWidth="6"
+        fill="#EEEEEE"></p-progressSpinner>
+    </div>
+  </div>
+</p-dialog>

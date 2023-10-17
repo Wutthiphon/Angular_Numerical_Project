@@ -28,6 +28,9 @@ import { SplineComponent } from './components/interpolation_and_extrapolation/sp
 import { LinearComponent } from './components/least_squares_regression/linear/linear.component';
 import { PolynomialComponent } from './components/least_squares_regression/polynomial/polynomial.component';
 import { MultipleLinearComponent } from './components/least_squares_regression/multiple-linear/multiple-linear.component';
+// Integration & Differentiation
+import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
+import { SimpsonComponent } from './components/integration_and_diff/simpson/simpson.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -104,6 +107,12 @@ const routes: Routes = [
     path: 'least_squares_regression/multiple_linear',
     component: MultipleLinearComponent,
   },
+  // Integration & Differentiation
+  {
+    path: 'integration_and_diff/trapezoidal',
+    component: TrapezoidalComponent,
+  },
+  { path: 'integration_and_diff/simpson', component: SimpsonComponent },
 ];
 
 @NgModule({

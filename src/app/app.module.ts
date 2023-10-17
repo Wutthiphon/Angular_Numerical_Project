@@ -96,6 +96,9 @@ import { SplineComponent } from './components/interpolation_and_extrapolation/sp
 import { LinearComponent } from './components/least_squares_regression/linear/linear.component';
 import { PolynomialComponent } from './components/least_squares_regression/polynomial/polynomial.component';
 import { MultipleLinearComponent } from './components/least_squares_regression/multiple-linear/multiple-linear.component';
+// Integration & Differentiation
+import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
+import { SimpsonComponent } from './components/integration_and_diff/simpson/simpson.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +128,9 @@ import { MultipleLinearComponent } from './components/least_squares_regression/m
     LinearComponent,
     PolynomialComponent,
     MultipleLinearComponent,
+    // Integration & Differentiation
+    TrapezoidalComponent,
+    SimpsonComponent,
   ],
   imports: [
     BrowserModule,
