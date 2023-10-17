@@ -41,15 +41,6 @@ export class OnePointIterationComponent {
       if (element == ' ') {
         html_formula += '';
         convert_formula += '';
-      } else if (element == '^' && formula[index + 1] == '(') {
-        // If formula have ^ replace to **
-        html_formula += '<sup>';
-        convert_formula += '**';
-
-        // If formula have ) replace to </sup>
-        if (formula.includes(')')) {
-          html_formula += '</sup>';
-        }
       } else if (element == 'e') {
         // If found e replace to Math.E
         html_formula += 'e';
@@ -101,11 +92,25 @@ export class OnePointIterationComponent {
       }
     });
 
-    // // If formula have sqrt replace to Math.sqrt
+    // If formula have sqrt replace to Math.sqrt
     if (formula.includes('sqrt') && !formula.includes('Math.sqrt')) {
       html_formula = formula.replace(/sqrt/g, '√');
       convert_formula = formula.replace(/sqrt/g, 'Math.sqrt');
     }
+
+    // If formula have ^ replace to ** and add <sup> and </sup> to html_formula
+    for (let i = 0; i < html_formula.length; i++) {
+      if (html_formula[i] == '^') {
+        html_formula = html_formula.replace(/\^/g, '<sup>');
+        html_formula = html_formula.replace(/\(/g, '');
+        html_formula = html_formula.replace(/\)/g, '</sup>');
+
+        convert_formula = convert_formula.replace(/\^/g, '**');
+      }
+    }
+
+    // remove space
+    html_formula = html_formula.replace(/ /g, '');
 
     this.calc_form.html_formula = html_formula;
     this.calc_form.convert_formula = convert_formula;

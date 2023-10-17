@@ -1,0 +1,16 @@
+.supsub {
+  display: inline-block;
+}
+
+.supsub sup,
+.supsub sub {
+  position: relative;
+  display: block;
+  font-size: 10pt;
+  line-height: 0.8;
+  padding-left: 2px;
+}
+
+.supsub sub {
+  top: 0.3em;
+}

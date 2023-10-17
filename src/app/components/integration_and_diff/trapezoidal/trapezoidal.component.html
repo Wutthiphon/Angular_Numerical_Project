@@ -18,10 +18,9 @@
           </p-inputNumber>
         </div>
         <div class="col-12 md:col-8">
-          <b>ค่าความผิดพลาด</b>
-          <p-inputNumber [(ngModel)]="calc_form.tolerance" mode="decimal" placeholder="6 .." styleClass="w-full"
-            [useGrouping]="false" [maxFractionDigits]="8">
-          </p-inputNumber>
+          <b>Mode คำนวณ: </b>
+          <p-dropdown [options]="calc_mode" [(ngModel)]="calc_form.mode" optionLabel="label" (onChange)="readFormula()"
+            optionValue="value"></p-dropdown>
         </div>
 
         <div class="col-12">
@@ -31,15 +30,21 @@
         </div>
 
         <div class="col-12 md:col-6">
-          <b>X<sub>0</sub></b>
-          <p-inputNumber [(ngModel)]="calc_form.x0" mode="decimal" placeholder="x0 .." styleClass="w-full"
-            [useGrouping]="false" [maxFractionDigits]="8">
+          <b>เริ่ม</b>
+          <p-inputNumber [(ngModel)]="calc_form.start" mode="decimal" placeholder="เริ่ม .." styleClass="w-full"
+            [useGrouping]="false">
           </p-inputNumber>
         </div>
         <div class="col-12 md:col-6">
-          <b>X<sub>1</sub></b>
-          <p-inputNumber [(ngModel)]="calc_form.x1" mode="decimal" placeholder="x1 .." styleClass="w-full"
-            [useGrouping]="false" [maxFractionDigits]="8">
+          <b>ถึง</b>
+          <p-inputNumber [(ngModel)]="calc_form.to" mode="decimal" placeholder="ถึง .." styleClass="w-full"
+            [useGrouping]="false">
+          </p-inputNumber>
+        </div>
+        <div class="col-12" *ngIf="calc_form.mode == 'composite'">
+          <b>n</b>
+          <p-inputNumber [(ngModel)]="calc_form.n" mode="decimal" placeholder="n .." styleClass="w-full"
+            [useGrouping]="false">
           </p-inputNumber>
         </div>
 
@@ -52,21 +57,20 @@
           <b>*หลังแปลงสมการ: </b>
           <label [innerHTML]="calc_form.convert_formula" *ngIf="calc_form.convert_formula != ''"></label>
           <label *ngIf="calc_form.convert_formula == ''">รอการใส่สมการ</label>
-        </div>
 
-        <div class="col-12"
-          *ngIf="calc_form.mode == 'bisection' || calc_form.mode == 'false_position' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
-          <b>ช่วงของ Root เริ่มจาก</b>
-          <p-inputNumber [(ngModel)]="calc_form.range.root.min" mode="decimal" placeholder="ช่วงของ Root..."
-            [minFractionDigits]="2" styleClass="w-full" [useGrouping]="false">
-          </p-inputNumber>
-        </div>
-        <div class="col-12"
-          *ngIf="calc_form.mode == 'bisection' || calc_form.mode == 'false_position' || (calc_form.mode == 'sample_var' && calc_form.sample_var_mode=='bisection')">
-          <b>ถึง</b>
-          <p-inputNumber [(ngModel)]="calc_form.range.root.max" mode="decimal" placeholder="ถึง ..." styleClass="w-full"
-            [minFractionDigits]="2" [useGrouping]="false">
-          </p-inputNumber>
+          <br>
+          <hr>
+          <div style="font-size: 14pt;text-align: center;" class="mt-2">
+            <b>
+              *I = ∫
+              <span class="supsub"><sup>{{ calc_form.to || '?' }}</sup><sub>{{ calc_form.start || '?' }}</sub></span>
+            </b>
+            <i>
+              (<label [innerHTML]="calc_form.html_formula" *ngIf="calc_form.convert_formula != ''" class="ml-2"></label>
+              <label *ngIf="calc_form.convert_formula == ''" class="ml-2">รอการใส่สมการ</label>
+              )dx
+            </i>
+          </div>
         </div>
 
         <div class="col-12" align="right">
@@ -92,44 +96,8 @@
           <b>คำตอบ:</b>
           {{ result_answer.answer || 'ยังไม่มีการคำนวณ' }}
           <br>
-          <b>จำนวนการ Loop:</b>
-          {{ result_answer.total_loop + ' ครั้ง' || 'ยังไม่มีการ Loop' }}
-        </div>
-        <div class="col-12" *ngIf="result_answer.answer">
-          <b>ตารางการคำนวณ</b>
-          <p-table [value]="result_answer.table" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-            currentPageReportTemplate="แสดง {first} ถึง {last} จาก {totalRecords} รายการ"
-            [rowsPerPageOptions]="[10, 25, 50]">
-            <ng-template pTemplate="header">
-              <tr>
-                <!-- <th>ครั้งที่</th>
-                <th>X<sub>l</sub></th>
-                <th>X<sub>r</sub></th>
-                <th>X<sub>m</sub></th>
-                <th>ปรับ</th> -->
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-result>
-              <!-- <tr>
-                <td>{{ result.loop_count }}</td>
-                <td>{{ result.xl }}</td>
-                <td>{{ result.xr }}</td>
-                <td>{{ result.xm }}</td>
-                <td>{{ result.change }}</td>
-              </tr> -->
-            </ng-template>
-          </p-table>
-        </div>
-      </div>
-    </p-card>
-  </div>
-  <div class="col-12 md:col-12" *ngIf="result_answer.answer">
-    <p-card header="กราฟ">
-      <div class="grid">
-        <div class="col-12" align="center">
-          <!-- <h4>ช่วงของ X Loop ครั้งที่ 1 ({{ calc_form.range.root.min.toFixed(calc_form.decimal_point) }} - {{
-            calc_form.range.root.max.toFixed(calc_form.decimal_point) }})</h4> -->
-          <!-- <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart> -->
+          <b>Error:</b>
+          {{ result_answer.error || 'ยังไม่มีการคำนวณ' }}
         </div>
       </div>
     </p-card>

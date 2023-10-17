@@ -76,26 +76,15 @@ export class GraphicalComponent {
   readFormula() {
     let html_formula = '';
     let convert_formula = '';
-    const { formula } = this.calc_form;
+    const { formula, mode } = this.calc_form;
+    let use_alphabet: any[] = [];
+    this.calc_form.input_array = [];
 
     formula.split('').forEach((element: any, index: number) => {
       // If found space remove space
       if (element == ' ') {
         html_formula += '';
         convert_formula += '';
-      } else if (element == '^' && formula[index + 1] == '(') {
-        // If formula have ^ replace to **
-        html_formula += '<sup>';
-        convert_formula += '**';
-
-        // If formula have ) replace to </sup>
-        if (formula.includes(')')) {
-          html_formula += '</sup>';
-        }
-      } else if (element == 's' && formula[index + 1] == 'q') {
-        // If found sqrt replace to Math.sqrt
-        html_formula += '√';
-        convert_formula += 'Math.sqrt';
       } else if (element == 'e') {
         // If found e replace to Math.E
         html_formula += 'e';
@@ -121,13 +110,51 @@ export class GraphicalComponent {
         html_formula += element;
         convert_formula += element;
       }
+
+      if (mode == 'sample_var') {
+        // If found english alphabet in formula add this to input_array sample found 1+x = 0 { label: 'x', value: '' }
+        if (element.match(/[a-z]/i)) {
+          if (
+            !use_alphabet.includes(element) &&
+            element != 'e' &&
+            mode == 'sample_var' &&
+            element != 's' &&
+            element != 'q' &&
+            element != 'r' &&
+            element != 't' &&
+            element != 'M' &&
+            element != 'a' &&
+            element != 't' &&
+            element != 'h'
+          ) {
+            use_alphabet.push(element);
+            this.calc_form.input_array.push({ label: element, value: '' });
+          }
+        } else {
+          this.calc_form.convert_formula_replace = '';
+        }
+      }
     });
 
-    // // If formula have sqrt replace to Math.sqrt
-    if (formula.includes('sqrt')) {
+    // If formula have sqrt replace to Math.sqrt
+    if (formula.includes('sqrt') && !formula.includes('Math.sqrt')) {
       html_formula = formula.replace(/sqrt/g, '√');
       convert_formula = formula.replace(/sqrt/g, 'Math.sqrt');
     }
+
+    // If formula have ^ replace to ** and add <sup> and </sup> to html_formula
+    for (let i = 0; i < html_formula.length; i++) {
+      if (html_formula[i] == '^') {
+        html_formula = html_formula.replace(/\^/g, '<sup>');
+        html_formula = html_formula.replace(/\(/g, '');
+        html_formula = html_formula.replace(/\)/g, '</sup>');
+
+        convert_formula = convert_formula.replace(/\^/g, '**');
+      }
+    }
+
+    // remove space
+    html_formula = html_formula.replace(/ /g, '');
 
     this.calc_form.html_formula = html_formula;
     this.calc_form.convert_formula = convert_formula;
