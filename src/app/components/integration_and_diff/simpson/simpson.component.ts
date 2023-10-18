@@ -179,11 +179,14 @@ export class SimpsonComponent {
   f_function(x: number) {
     const { convert_formula } = this.calc_form;
     // If x < 0 add () to formula
+    this.result_logs += `X: ${x}\n`;
     if (x < 0) {
       let fx: number = eval(convert_formula.replace(/x/g, `(${x})`));
+      this.result_logs += `f(${x}) = ${fx}\n`;
       return fx;
     } else {
       let fx: number = eval(convert_formula.replace(/x/g, x));
+      this.result_logs += `f(${x}) = ${fx}\n`;
       return fx;
     }
   }
