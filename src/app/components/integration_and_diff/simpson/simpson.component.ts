@@ -161,10 +161,12 @@ export class SimpsonComponent {
       for (let i = 1; i < n; i += 2) {
         result += 4 * this.f_function(start + i * h);
       }
+      // First for loop is 4 * f(x) for odd number
 
       for (let i = 2; i < n - 1; i += 2) {
         result += 2 * this.f_function(start + i * h);
       }
+      // Second for loop is 2 * f(x) for even number
 
       result = (h / 3) * result;
 
@@ -182,11 +184,19 @@ export class SimpsonComponent {
     this.result_logs += `X: ${x}\n`;
     if (x < 0) {
       let fx: number = eval(convert_formula.replace(/x/g, `(${x})`));
-      this.result_logs += `f(${x}) = ${fx}\n`;
+      this.result_logs += `f(${x}) = ${convert_formula.replace(
+        /x/g,
+        x
+      )} => ${fx}\n`;
+      this.result_logs += `---------------------------------\n`;
       return fx;
     } else {
       let fx: number = eval(convert_formula.replace(/x/g, x));
-      this.result_logs += `f(${x}) = ${fx}\n`;
+      this.result_logs += `f(${x}) = ${convert_formula.replace(
+        /x/g,
+        x
+      )} => ${fx}\n`;
+      this.result_logs += `---------------------------------\n`;
       return fx;
     }
   }

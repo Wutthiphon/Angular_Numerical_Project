@@ -172,7 +172,11 @@ export class TrapezoidalComponent {
     // replace x to value in convert_formula
     let fx: number = eval(convert_formula.replace(/x/g, x));
     this.result_logs += `X: ${x}\n`;
-    this.result_logs += `f(${x}) = ${fx}\n`;
+    this.result_logs += `f(${x}) = ${convert_formula.replace(
+      /x/g,
+      x
+    )} => ${fx}\n`;
+    this.result_logs += `---------------------------------\n`;
     return fx;
   }
 
