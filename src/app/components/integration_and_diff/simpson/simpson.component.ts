@@ -168,7 +168,7 @@ export class SimpsonComponent {
       }
       // Second for loop is 2 * f(x) for even number
 
-      result = (h / 3) * result;
+      result = (h / 6) * result;
 
       this.result_answer.answer = result.toFixed(decimal_point);
       this.result_logs += `answer = ${result.toFixed(decimal_point)}\n`;
