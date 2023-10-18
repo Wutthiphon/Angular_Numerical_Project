@@ -119,12 +119,20 @@ export class TrapezoidalComponent {
       }
 
       // Calculate
-      const h = to - start;
-      const result = (h / 2) * (this.f_function(start) + this.f_function(to));
+      let result: number = 0;
+      let fx0 = this.f_function(start);
+      let fx1 = this.f_function(to);
+      result = ((to - start) * (fx0 + fx1)) / 2;
 
       this.result_answer.answer = result.toFixed(decimal_point);
       this.result_logs += `answer = ${result.toFixed(decimal_point)}\n`;
+
       // Error
+      // let fx0 = this.f_function(start);
+      // let fx1 = this.f_function(to);
+      // let i = ((to - start) * (fx0 + fx1)) / 2;
+      // let error = Math.abs((result - i) / result);
+      // this.result_answer.error = error.toFixed(decimal_point);
     } else if (mode == 'composite') {
       this.result_logs += `Mode: Composite\n`;
       this.result_logs += `n = ${n}\n`;
@@ -149,6 +157,11 @@ export class TrapezoidalComponent {
       this.result_answer.answer = result.toFixed(decimal_point);
       this.result_logs += `answer = ${result.toFixed(decimal_point)}\n`;
       // Error
+      // let fx0 = this.f_function(start);
+      // let fx1 = this.f_function(to);
+      // let i = ((to - start) * (fx0 + fx1)) / 2;
+      // let error = Math.abs((result - i) / result);
+      // this.result_answer.error = error.toFixed(decimal_point);
     }
 
     this.result_logs += `---------------------------------\n`;
