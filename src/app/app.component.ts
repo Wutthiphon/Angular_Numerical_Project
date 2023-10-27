@@ -126,6 +126,10 @@ export class AppComponent implements OnInit {
           label: "Simpson's Rule",
           routerLink: '/integration_and_diff/simpson',
         },
+        {
+          label: 'Differentaition',
+          routerLink: '/integration_and_diff/diff',
+        },
       ],
     },
   ];

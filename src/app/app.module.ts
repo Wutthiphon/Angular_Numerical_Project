@@ -99,6 +99,7 @@ import { MultipleLinearComponent } from './components/least_squares_regression/m
 // Integration & Differentiation
 import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
 import { SimpsonComponent } from './components/integration_and_diff/simpson/simpson.component';
+import { DiffComponent } from './components/integration_and_diff/diff/diff.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -131,6 +132,7 @@ import { SimpsonComponent } from './components/integration_and_diff/simpson/simp
     // Integration & Differentiation
     TrapezoidalComponent,
     SimpsonComponent,
+    DiffComponent,
   ],
   imports: [
     BrowserModule,

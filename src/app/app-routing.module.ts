@@ -31,6 +31,7 @@ import { MultipleLinearComponent } from './components/least_squares_regression/m
 // Integration & Differentiation
 import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
 import { SimpsonComponent } from './components/integration_and_diff/simpson/simpson.component';
+import { DiffComponent } from './components/integration_and_diff/diff/diff.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -113,6 +114,7 @@ const routes: Routes = [
     component: TrapezoidalComponent,
   },
   { path: 'integration_and_diff/simpson', component: SimpsonComponent },
+  { path: 'integration_and_diff/diff', component: DiffComponent },
 ];
 
 @NgModule({
