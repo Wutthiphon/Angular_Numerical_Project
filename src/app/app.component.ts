@@ -116,7 +116,7 @@ export class AppComponent implements OnInit {
       ],
     },
     {
-      label: 'Integration & Differentaition',
+      label: 'Integration & Differentiation',
       items: [
         {
           label: 'Trapezoidal Rule',
@@ -127,7 +127,7 @@ export class AppComponent implements OnInit {
           routerLink: '/integration_and_diff/simpson',
         },
         {
-          label: 'Differentaition',
+          label: 'Differentiation',
           routerLink: '/integration_and_diff/diff',
         },
       ],
