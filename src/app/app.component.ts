@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { NavigationEnd, Router } from '@angular/router';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -133,8 +134,20 @@ export class AppComponent implements OnInit {
       ],
     },
   ];
+  api_status: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {
+    this.apiService.checkServerStatus().subscribe(
+      (res: any) => {
+        if (res.status == true) {
+          this.api_status = true;
+        }
+      },
+      (err: any) => {
+        this.api_status = false;
+      }
+    );
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe((val) => {

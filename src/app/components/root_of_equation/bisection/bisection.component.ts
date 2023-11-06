@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { ApiService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -64,7 +65,10 @@ export class BisectionComponent {
   };
   chart1_data: any;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private apiService: ApiService
+  ) {}
 
   readFormula() {
     let html_formula = '';
@@ -181,232 +185,292 @@ export class BisectionComponent {
     this.result_answer.bisection_table = [];
     this.result_answer.total_loop = 0;
 
-    setTimeout(() => {
-      try {
-        if (mode == 'sample_var') {
-          if (sample_var_mode == 'normal') {
-            let answer = 0;
-            if (convert_formula_replace) {
-              answer = eval(convert_formula_replace);
-            } else {
-              answer = eval(convert_formula);
-            }
+    this.apiService
+      .findFormula(convert_formula_replace, range.root, 'bisection')
+      .subscribe((res: any) => {
+        if (res.status == true) {
+          // If Found Previous Calculate
+          this.result_logs += 'Found Previous Calculate In Database\n';
+          this.result_answer.answer = Number(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'answer';
+            })?.value
+          ).toFixed(decimal_point);
+          this.result_answer.total_loop =
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'loop_count';
+            })?.value;
+          this.result_answer.bisection_table = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'bisection_table';
+            })?.value
+          );
+          this.chart1_data = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'chart1';
+            })?.value
+          );
+          this.isLoad_calc = false;
+        } else {
+          let result_mid: number = 0;
 
-            this.result_logs +=
-              'formula : ' +
-              convert_formula +
-              ' | replace : ' +
-              convert_formula_replace +
-              '\n';
-            this.result_logs +=
-              'answer: ' + answer.toFixed(decimal_point).toString() + '\n';
+          setTimeout(() => {
+            try {
+              if (mode == 'sample_var') {
+                if (sample_var_mode == 'normal') {
+                  let answer = 0;
+                  if (convert_formula_replace) {
+                    answer = eval(convert_formula_replace);
+                  } else {
+                    answer = eval(convert_formula);
+                  }
 
-            this.result_answer.answer = answer
-              .toFixed(decimal_point)
-              .toString();
-          } else if (sample_var_mode == 'bisection') {
-            // Check range of x have min and max
-            if (range.root.min == null || range.root.max == null) {
-              error++;
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'กรุณาใส่ช่วงของ X',
-              });
-            }
+                  this.result_logs +=
+                    'formula : ' +
+                    convert_formula +
+                    ' | replace : ' +
+                    convert_formula_replace +
+                    '\n';
+                  this.result_logs +=
+                    'answer: ' +
+                    answer.toFixed(decimal_point).toString() +
+                    '\n';
 
-            if (
-              convert_formula_replace == null ||
-              convert_formula_replace == ''
-            ) {
-              error++;
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'แทนค่าสมการ Error',
-              });
-            }
+                  this.result_answer.answer = answer
+                    .toFixed(decimal_point)
+                    .toString();
+                } else if (sample_var_mode == 'bisection') {
+                  // Check range of x have min and max
+                  if (range.root.min == null || range.root.max == null) {
+                    error++;
+                    this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: 'กรุณาใส่ช่วงของ X',
+                    });
+                  }
 
-            // if error == 0 do fomula
-            if (error == 0) {
-              this.result_logs +=
-                'f(x) = ' + convert_formula_replace + '=0' + '\n';
-              this.result_logs += `---------------------------------` + '\n';
+                  if (
+                    convert_formula_replace == null ||
+                    convert_formula_replace == ''
+                  ) {
+                    error++;
+                    this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: 'แทนค่าสมการ Error',
+                    });
+                  }
 
-              let a: number = range.root.min;
-              let b: number = range.root.max;
+                  // if error == 0 do fomula
+                  if (error == 0) {
+                    this.result_logs +=
+                      'f(x) = ' + convert_formula_replace + '=0' + '\n';
+                    this.result_logs +=
+                      `---------------------------------` + '\n';
 
-              let i = 0;
-              while (true) {
-                let mid = (a + b) / 2;
+                    let a: number = range.root.min;
+                    let b: number = range.root.max;
 
-                this.result_logs +=
-                  `Iteration Loop ${i}: mid = ${a.toFixed(
-                    decimal_point
-                  )} + ${b.toFixed(decimal_point)} / 2` + '\n';
-                this.result_logs +=
-                  `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
+                    let i = 0;
+                    while (true) {
+                      let mid = (a + b) / 2;
 
-                let f_x_test = convert_formula_replace.replace(
-                  /x/g,
-                  mid.toFixed(decimal_point).toString()
-                );
-                this.result_logs +=
-                  'f(x) = ' +
-                  Number(eval(f_x_test)).toFixed(decimal_point).toString() +
-                  '\n';
-                this.result_logs += `---------------------------------` + '\n';
+                      this.result_logs +=
+                        `Iteration Loop ${i}: mid = ${a.toFixed(
+                          decimal_point
+                        )} + ${b.toFixed(decimal_point)} / 2` + '\n';
+                      this.result_logs +=
+                        `Iteration Result: ${mid.toFixed(decimal_point)}` +
+                        '\n';
 
-                let change = '';
-                if (this.f_function(mid, convert_formula_replace) == 0) {
-                  this.result_answer.answer = mid.toFixed(decimal_point);
-                  this.result_answer.bisection_table.push({
-                    loop_count: ++i,
-                    xl: a.toFixed(decimal_point),
-                    xr: b.toFixed(decimal_point),
-                    xm: mid.toFixed(decimal_point),
-                    change: '-',
+                      let f_x_test = convert_formula_replace.replace(
+                        /x/g,
+                        mid.toFixed(decimal_point).toString()
+                      );
+                      this.result_logs +=
+                        'f(x) = ' +
+                        Number(eval(f_x_test))
+                          .toFixed(decimal_point)
+                          .toString() +
+                        '\n';
+                      this.result_logs +=
+                        `---------------------------------` + '\n';
+
+                      let change = '';
+                      if (this.f_function(mid, convert_formula_replace) == 0) {
+                        this.result_answer.answer = mid.toFixed(decimal_point);
+                        this.result_answer.bisection_table.push({
+                          loop_count: ++i,
+                          xl: a.toFixed(decimal_point),
+                          xr: b.toFixed(decimal_point),
+                          xm: mid.toFixed(decimal_point),
+                          change: '-',
+                        });
+                        result_mid = mid;
+                        break;
+                      } else if (
+                        this.f_function(a, convert_formula_replace) *
+                          this.f_function(mid, convert_formula_replace) <
+                        0
+                      ) {
+                        b = mid;
+                        change = 'R ';
+                      } else {
+                        a = mid;
+                        change = 'L ';
+                      }
+
+                      this.result_answer.bisection_table.push({
+                        loop_count: ++i,
+                        xl: a.toFixed(decimal_point),
+                        xr: b.toFixed(decimal_point),
+                        xm: mid.toFixed(decimal_point),
+                        change: change,
+                      });
+                      this.result_answer.total_loop++;
+                    }
+                  }
+                }
+              }
+
+              if (mode == 'bisection') {
+                // Check range of x have min and max
+                if (range.root.min == null || range.root.max == null) {
+                  error++;
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'กรุณาใส่ช่วงของ X',
                   });
-                  break;
-                } else if (
-                  this.f_function(a, convert_formula_replace) *
-                    this.f_function(mid, convert_formula_replace) <
-                  0
-                ) {
-                  b = mid;
-                  change = 'R ';
-                } else {
-                  a = mid;
-                  change = 'L ';
                 }
 
-                this.result_answer.bisection_table.push({
-                  loop_count: ++i,
-                  xl: a.toFixed(decimal_point),
-                  xr: b.toFixed(decimal_point),
-                  xm: mid.toFixed(decimal_point),
-                  change: change,
-                });
-                this.result_answer.total_loop++;
-              }
-            }
-          }
-        }
+                // if error == 0 do fomula
+                if (error == 0) {
+                  this.result_logs += 'f(x) = ' + convert_formula + '=0' + '\n';
+                  this.result_logs +=
+                    `---------------------------------` + '\n';
 
-        if (mode == 'bisection') {
-          // Check range of x have min and max
-          if (range.root.min == null || range.root.max == null) {
-            error++;
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'กรุณาใส่ช่วงของ X',
-            });
-          }
+                  let a: number = range.root.min;
+                  let b: number = range.root.max;
 
-          // if error == 0 do fomula
-          if (error == 0) {
-            this.result_logs += 'f(x) = ' + convert_formula + '=0' + '\n';
-            this.result_logs += `---------------------------------` + '\n';
+                  let i = 0;
+                  while (true) {
+                    let mid = (a + b) / 2;
 
-            let a: number = range.root.min;
-            let b: number = range.root.max;
+                    this.result_logs +=
+                      `Iteration Loop ${i}: mid = ${a.toFixed(
+                        decimal_point
+                      )} + ${b.toFixed(decimal_point)} / 2` + '\n';
+                    this.result_logs +=
+                      `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
 
-            let i = 0;
-            while (true) {
-              let mid = (a + b) / 2;
+                    let f_x_test = convert_formula.replace(
+                      /x/g,
+                      mid.toFixed(decimal_point).toString()
+                    );
+                    this.result_logs +=
+                      'f(x) = ' +
+                      Number(eval(f_x_test)).toFixed(decimal_point).toString() +
+                      '\n';
+                    this.result_logs +=
+                      `---------------------------------` + '\n';
 
-              this.result_logs +=
-                `Iteration Loop ${i}: mid = ${a.toFixed(
-                  decimal_point
-                )} + ${b.toFixed(decimal_point)} / 2` + '\n';
-              this.result_logs +=
-                `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
+                    let change = '';
 
-              let f_x_test = convert_formula.replace(
-                /x/g,
-                mid.toFixed(decimal_point).toString()
-              );
-              this.result_logs +=
-                'f(x) = ' +
-                Number(eval(f_x_test)).toFixed(decimal_point).toString() +
-                '\n';
-              this.result_logs += `---------------------------------` + '\n';
+                    if (this.f_function(mid, convert_formula) == 0) {
+                      this.result_answer.answer = mid.toFixed(decimal_point);
+                      this.result_answer.bisection_table.push({
+                        loop_count: ++i,
+                        xl: a.toFixed(decimal_point),
+                        xr: b.toFixed(decimal_point),
+                        xm: mid.toFixed(decimal_point),
+                        change: '-',
+                      });
+                      result_mid = mid;
+                      break;
+                    } else if (
+                      this.f_function(a, convert_formula) *
+                        this.f_function(mid, convert_formula) <
+                      0
+                    ) {
+                      b = mid;
+                      change = 'R ';
+                    } else {
+                      a = mid;
+                      change = 'L ';
+                    }
 
-              let change = '';
-
-              if (this.f_function(mid, convert_formula) == 0) {
-                this.result_answer.answer = mid.toFixed(decimal_point);
-                this.result_answer.bisection_table.push({
-                  loop_count: ++i,
-                  xl: a.toFixed(decimal_point),
-                  xr: b.toFixed(decimal_point),
-                  xm: mid.toFixed(decimal_point),
-                  change: '-',
-                });
-                break;
-              } else if (
-                this.f_function(a, convert_formula) *
-                  this.f_function(mid, convert_formula) <
-                0
-              ) {
-                b = mid;
-                change = 'R ';
-              } else {
-                a = mid;
-                change = 'L ';
+                    this.result_answer.bisection_table.push({
+                      loop_count: ++i,
+                      xl: a.toFixed(decimal_point),
+                      xr: b.toFixed(decimal_point),
+                      xm: mid.toFixed(decimal_point),
+                      change: change,
+                    });
+                    this.result_answer.total_loop++;
+                  }
+                }
               }
 
-              this.result_answer.bisection_table.push({
-                loop_count: ++i,
-                xl: a.toFixed(decimal_point),
-                xr: b.toFixed(decimal_point),
-                xm: mid.toFixed(decimal_point),
-                change: change,
+              this.chart1_data = {
+                labels: this.result_answer.bisection_table.map(
+                  (item: any) => item.loop_count
+                ),
+                datasets: [
+                  {
+                    label: 'Xm',
+                    data: this.result_answer.bisection_table.map(
+                      (item: any) => item.xm
+                    ),
+                    borderColor: '#42A5F5',
+                    fill: false,
+                    tension: 0.1,
+                  },
+                ],
+              };
+
+              // Save To Database
+              this.apiService
+                .saveFormula(convert_formula_replace, range.root, 'bisection', {
+                  answer: result_mid,
+                  loop_count: this.result_answer.total_loop,
+                  bisection_table: this.result_answer.bisection_table,
+                  chart1: this.chart1_data,
+                })
+                .subscribe((res: any) => {
+                  if (res.status == true) {
+                    this.messageService.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: 'บันทึกการคำนวนสำเร็จ',
+                    });
+                  }
+                });
+
+              this.isLoad_calc = false;
+            } catch (error) {
+              // Error
+              this.result_answer = {
+                answer: '',
+                bisection_table: Array<any>(),
+                total_loop: 0,
+              };
+              this.isLoad_calc = false;
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'ข้อผิดพลาด',
               });
-              this.result_answer.total_loop++;
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: 'สมการไม่ถูกต้อง <br>' + error,
+              });
             }
-          }
+          }, 30);
         }
-
-        this.chart1_data = {
-          labels: this.result_answer.bisection_table.map(
-            (item: any) => item.loop_count
-          ),
-          datasets: [
-            {
-              label: 'Xm',
-              data: this.result_answer.bisection_table.map(
-                (item: any) => item.xm
-              ),
-              borderColor: '#42A5F5',
-              fill: false,
-              tension: 0.1,
-            },
-          ],
-        };
-
-        this.isLoad_calc = false;
-      } catch (error) {
-        // Error
-        this.result_answer = {
-          answer: '',
-          bisection_table: Array<any>(),
-          total_loop: 0,
-        };
-        this.isLoad_calc = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'ข้อผิดพลาด',
-        });
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          html: 'สมการไม่ถูกต้อง <br>' + error,
-        });
-      }
-    }, 30);
+      });
   }
 
   f_function(x: number, convert_formula: any) {

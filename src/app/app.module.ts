@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // PrimeNG Modules
 import { MenubarModule } from 'primeng/menubar';
@@ -139,6 +140,7 @@ import { DiffComponent } from './components/integration_and_diff/diff/diff.compo
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
     // PrimeNG Modules
     MenubarModule,
     ButtonModule,
