@@ -229,12 +229,12 @@ export class FalsePositionComponent {
 
             // if error == 0 do fomula
             if (error == 0) {
-              // this.result_logs +=
-              //   'f(x) = ' + convert_formula_replace + '=0' + '\n';
-              // this.result_logs += `---------------------------------` + '\n';
+              this.result_logs +=
+                'f(x) = ' + convert_formula_replace + '=0' + '\n';
+              this.result_logs += `---------------------------------` + '\n';
 
-              // let a: number = range.root.min;
-              // let b: number = range.root.max;
+              let a: number = range.root.min;
+              let b: number = range.root.max;
 
               // let i = 0;
               // while (true) {
