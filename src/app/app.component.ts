@@ -64,10 +64,6 @@ export class AppComponent implements OnInit {
           routerLink: '/linear_algebraic_equations/lu_decomposition',
         },
         {
-          label: 'Cholesky Decomposition',
-          routerLink: '/linear_algebraic_equations/cholesky_decomposition',
-        },
-        {
           label: 'Jacobi Iteration',
           routerLink: '/linear_algebraic_equations/jacobi_iteration',
         },

@@ -4,7 +4,7 @@
     <p-divider></p-divider>
   </div>
 
-  <div class="col-12 md:col-5">
+  <div class="col-12 md:col-6">
     <div class="grid">
       <div class="col-12">
         <p-card header="ชุดข้อมูล" styleClass="h-full">
@@ -18,6 +18,7 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 75px;">จุดที่</th>
+                    <th></th>
                     <th>X</th>
                     <th>Y</th>
                     <th></th>
@@ -27,13 +28,16 @@
                   <tr>
                     <td>{{ rowIndex + 1 }}</td>
                     <td>
+                      <p-checkbox [(ngModel)]="data.isSelect" [binary]="true"></p-checkbox>
+                    </td>
+                    <td>
                       <p-inputNumber [(ngModel)]="data.x" name="input_data_x" #input_data_x="ngModel"
-                        [style]="{ width: '100%' }" mode="decimal" [maxFractionDigits]="10" placeholder="x">
+                        [style]="{ width: '100px' }" mode="decimal" [maxFractionDigits]="10" placeholder="x">
                       </p-inputNumber>
                     </td>
                     <td>
                       <p-inputNumber [(ngModel)]="data.y" name="input_data_y" #input_data_y="ngModel"
-                        [style]="{ width: '100%' }" mode="decimal" [maxFractionDigits]="10" placeholder="y">
+                        [style]="{ width: '100px' }" mode="decimal" [maxFractionDigits]="10" placeholder="y">
                       </p-inputNumber>
                     </td>
                     <td>
@@ -55,64 +59,20 @@
       <div class="col-12">
         <p-card header="วิธีการหาคำตอบ" styleClass="h-full">
           <div class="grid">
-            <div class="col-12 flex align-content-center mb-4">
-              <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
-              <b class="ml-2 mt-1">Debug Mode</b>
-            </div>
             <div class="col-12 md:col-4">
               <b>ตำแหน่งทศนิยม</b>
               <p-inputNumber [(ngModel)]="calc_form.decimal_point" mode="decimal" placeholder="6 .." styleClass="w-full"
                 [useGrouping]="false">
               </p-inputNumber>
             </div>
-            <div class="col-12 md:col-8">
-              <b>Mode คำนวณ: </b>
-              <p-dropdown [options]="calc_mode" [(ngModel)]="calc_form.mode" optionLabel="label"
-                optionValue="value"></p-dropdown>
-            </div>
 
-            <div class="col-12">
-              <b>จุดที่ต้องการหาคำตอบ</b>
-              <p-inputNumber [(ngModel)]="calc_form.target" mode="decimal" placeholder="จุดที่ต้องการหาคำตอบ"
+            <div class="col-12 md:col-8">
+              <b>จุดที่ต้องการหา (x)</b>
+              <p-inputNumber [(ngModel)]="calc_form.target" mode="decimal" placeholder="จุดที่ต้องการหา"
                 styleClass="w-full">
               </p-inputNumber>
             </div>
-            <div class="col-12">
-              <div class="grid" *ngIf="calc_form.mode == 'linear'">
-                <div class="col-6">
-                  <b>จุดที่ 1</b>
-                  <p-inputNumber [(ngModel)]="calc_form.point_1" mode="decimal" placeholder="จุดที่ 1" [min]="1"
-                    styleClass="w-full" [useGrouping]="false">
-                  </p-inputNumber>
-                </div>
-                <div class="col-6">
-                  <b>จุดที่ 2</b>
-                  <p-inputNumber [(ngModel)]="calc_form.point_2" mode="decimal" placeholder="จุดที่ 2" [min]="1"
-                    styleClass="w-full" [useGrouping]="false">
-                  </p-inputNumber>
-                </div>
-              </div>
-              <div class="grid" *ngIf="calc_form.mode == 'quadratic'">
-                <div class="col-4">
-                  <b>จุดที่ 1</b>
-                  <p-inputNumber [(ngModel)]="calc_form.point_1" mode="decimal" placeholder="จุดที่ 1" [min]="1"
-                    styleClass="w-full" [useGrouping]="false">
-                  </p-inputNumber>
-                </div>
-                <div class="col-4">
-                  <b>จุดที่ 2</b>
-                  <p-inputNumber [(ngModel)]="calc_form.point_2" mode="decimal" placeholder="จุดที่ 2" [min]="1"
-                    styleClass="w-full" [useGrouping]="false">
-                  </p-inputNumber>
-                </div>
-                <div class="col-4">
-                  <b>จุดที่ 3</b>
-                  <p-inputNumber [(ngModel)]="calc_form.point_3" mode="decimal" placeholder="จุดที่ 3" [min]="1"
-                    styleClass="w-full" [useGrouping]="false">
-                  </p-inputNumber>
-                </div>
-              </div>
-            </div>
+
             <div class="col-12" align="right">
               <button pButton type="button" label="Reset" icon="pi pi-trash" (click)="reset()"
                 class="p-button-outlined p-button-rounded p-button-sm mr-2"></button>
@@ -124,23 +84,32 @@
       </div>
     </div>
   </div>
-  <div class="col-12 md:col-7">
+  <div class="col-12 md:col-6">
     <p-card header="คำตอบ" styleClass="h-full">
       <div class="grid">
         <div class="col-12">
-          <div class="col-12" *ngIf="debug_mode">
-            <b>Logs:</b>
-            <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
-            <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
-              class="p-button-sm"></button>
-          </div>
-
           <div class="col-12">
             <b>คำตอบ:</b>
             {{ calc_form.answer || 'ยังไม่มีการคำนวณ' }}
+          </div>
+
+          <div class="col-12 md:col-12" *ngIf="calc_form.answer">
+            <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart>
           </div>
         </div>
       </div>
     </p-card>
   </div>
 </div>
+
+<p-toast></p-toast>
+
+<p-dialog header="กำลังประมวลผล..." [(visible)]="isLoad_calc" [modal]="true"
+  [style]="{ 'min-width': '360.5px',width: '30%' }" [draggable]="false" [resizable]="false" [closable]="false">
+  <div class="grid">
+    <div class="col-12 mt-2" align="center">
+      <p-progressSpinner [style]="{ 'width': '75px', 'height': '75px' }" strokeWidth="6"
+        fill="#EEEEEE"></p-progressSpinner>
+    </div>
+  </div>
+</p-dialog>
