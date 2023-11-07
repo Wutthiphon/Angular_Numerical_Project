@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./gauss-jordan.component.scss'],
 })
 export class GaussJordanComponent {
-  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_form: any = {
@@ -20,8 +19,7 @@ export class GaussJordanComponent {
     input_array_B: [],
   };
 
-  result_logs: string = '';
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -46,8 +44,57 @@ export class GaussJordanComponent {
   }
 
   calculate() {
-    console.log(this.calc_form.input_array_Ax);
-    console.log(this.calc_form.input_array_B);
+    this.isLoad_calc = true;
+    let matrixA = this.calc_form.input_array_Ax.map((row: any) => {
+      return row.cols.map((col: any) => {
+        return col.value;
+      });
+    });
+    let matrixB = this.calc_form.input_array_B.map((row: any) => {
+      return row.value;
+    });
+
+    // Gauss Jordan
+    const n = matrixA.length;
+
+    // Augmented Matrix [A|B]
+    let augmentedMatrix = [];
+    for (let i = 0; i < n; i++) {
+      augmentedMatrix.push([...matrixA[i], matrixB[i]]);
+    }
+
+    // Perform elementary row operations
+    // Note ith is row and jth is column
+    for (let i = 0; i < n; i++) {
+      // get the value of the diagonal element
+      let divider = augmentedMatrix[i][i];
+
+      // divide every element in the ith row by the diagonal element
+      for (let j = 0; j < n + 1; j++) {
+        augmentedMatrix[i][j] = augmentedMatrix[i][j] / divider;
+      }
+
+      // subtract A[j][i] * A[i][k] from A[j][k] for every element in the ith column and rows except ith row
+      for (let j = 0; j < n; j++) {
+        if (j !== i) {
+          let multiplier = augmentedMatrix[j][i];
+          for (let k = 0; k < n + 1; k++) {
+            augmentedMatrix[j][k] =
+              augmentedMatrix[j][k] - multiplier * augmentedMatrix[i][k];
+          }
+        }
+      }
+    }
+
+    // Get the solution
+    let x = [];
+    for (let i = 0; i < n; i++) {
+      x.push(augmentedMatrix[i][n]);
+    }
+
+    // Display answer
+    this.result_answer.answer = x;
+    this.isLoad_calc = false;
   }
 
   reset() {
@@ -59,13 +106,8 @@ export class GaussJordanComponent {
     this.calc_form.input_array_B.forEach((row: any) => {
       row.value = null;
     });
-    this.result_logs = '';
     this.result_answer = {
       answer: [],
     };
-  }
-
-  clear_logs() {
-    this.result_logs = '';
   }
 }

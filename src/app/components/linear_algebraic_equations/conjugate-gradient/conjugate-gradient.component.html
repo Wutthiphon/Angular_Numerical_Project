@@ -7,10 +7,6 @@
   <div class="col-12 md:col-12">
     <p-card header="สมการและการแทนค่า">
       <div class="grid">
-        <div class="col-12 flex align-content-center mb-4">
-          <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
-          <b class="ml-2 mt-1">Debug Mode</b>
-        </div>
 
         <div class="col-12 md:col-3">
           แถว
@@ -21,16 +17,6 @@
           คอลัมน์
           <input type="text" pInputText [(ngModel)]="calc_form.input_length.cols" placeholder="cols..."
             name="f_input_cols" #f_input_cols="ngModel" class="mt-1 mb-1 w-full" (input)="updateInputSize()" />
-        </div>
-        <div class="col-12 md:col-3">
-          Initial x0
-          <input type="text" pInputText [(ngModel)]="calc_form.range.initial.x0" placeholder="rows..."
-            name="f_input_rows" #f_input_rows="ngModel" class="mt-1 mb-1 w-full" />
-        </div>
-        <div class="col-12 md:col-3">
-          Initial x1
-          <input type="text" pInputText [(ngModel)]="calc_form.range.initial.x1" placeholder="cols..."
-            name="f_input_cols" #f_input_cols="ngModel" class="mt-1 mb-1 w-full" />
         </div>
 
         <div class="col-12" *ngIf="calc_form.input_length.rows && calc_form.input_length.cols">
@@ -72,13 +58,6 @@
   <div class="col-12 md:col-12">
     <p-card header="คำตอบ" styleClass="h-full">
       <div class="grid">
-        <div class="col-12" *ngIf="debug_mode">
-          <b>Logs:</b>
-          <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
-          <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
-            class="p-button-sm"></button>
-        </div>
-
         <div class="col-12">
           <b>คำตอบ:</b>
         </div>

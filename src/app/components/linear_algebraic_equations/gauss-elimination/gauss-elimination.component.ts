@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./gauss-elimination.component.scss'],
 })
 export class GaussEliminationComponent {
-  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_form: any = {
@@ -20,8 +19,7 @@ export class GaussEliminationComponent {
     input_array_B: [],
   };
 
-  result_logs: string = '';
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -46,8 +44,44 @@ export class GaussEliminationComponent {
   }
 
   calculate() {
-    console.log(this.calc_form.input_array_Ax);
-    console.log(this.calc_form.input_array_B);
+    this.isLoad_calc = true;
+    let matrixA = this.calc_form.input_array_Ax.map((row: any) => {
+      return row.cols.map((col: any) => {
+        return col.value;
+      });
+    });
+    let matrixB = this.calc_form.input_array_B.map((row: any) => {
+      return row.value;
+    });
+
+    // Gaussian Elimination
+    const n = matrixA.length;
+
+    // Forward Elimination
+    for (let k = 0; k < n - 1; k++) {
+      for (let i = k + 1; i < n; i++) {
+        let factor = matrixA[i][k] / matrixA[k][k];
+        for (let j = k; j < n; j++) {
+          matrixA[i][j] = matrixA[i][j] - factor * matrixA[k][j];
+        }
+        matrixB[i] = matrixB[i] - factor * matrixB[k];
+      }
+    }
+
+    // Backward Substitution
+    let x = new Array(n);
+    x[n - 1] = matrixB[n - 1] / matrixA[n - 1][n - 1];
+    for (let i = n - 2; i >= 0; i--) {
+      let sum = matrixB[i];
+      for (let j = i + 1; j < n; j++) {
+        sum = sum - matrixA[i][j] * x[j];
+      }
+      x[i] = sum / matrixA[i][i];
+    }
+
+    // Display Answer
+    this.isLoad_calc = false;
+    this.result_answer.answer = x;
   }
 
   reset() {
@@ -59,13 +93,8 @@ export class GaussEliminationComponent {
     this.calc_form.input_array_B.forEach((row: any) => {
       row.value = null;
     });
-    this.result_logs = '';
     this.result_answer = {
       answer: [],
     };
-  }
-
-  clear_logs() {
-    this.result_logs = '';
   }
 }

@@ -3,14 +3,9 @@
     <h1>LU DECOMPOSITION</h1>
     <p-divider></p-divider>
   </div>
-
   <div class="col-12 md:col-12">
     <p-card header="สมการและการแทนค่า">
       <div class="grid">
-        <div class="col-12 flex align-content-center mb-4">
-          <p-inputSwitch [(ngModel)]="debug_mode" binary="true" onLabel="เปิด" offLabel="ปิด"></p-inputSwitch>
-          <b class="ml-2 mt-1">Debug Mode</b>
-        </div>
 
         <div class="col-12 md:col-3">
           แถว
@@ -59,21 +54,26 @@
       </div>
     </p-card>
   </div>
-  <div class="col-12 md:col-12">
+  <div class="col-12 md:col-12" *ngIf="result_answer.answer.length > 0">
     <p-card header="คำตอบ" styleClass="h-full">
       <div class="grid">
-        <div class="col-12" *ngIf="debug_mode">
-          <b>Logs:</b>
-          <textarea rows="10" pInputTextarea [disabled]="true">{{ result_logs }}</textarea>
-          <button pButton type="button" icon="pi pi-trash" label="ล้าง Logs" (click)="clear_logs()"
-            class="p-button-sm"></button>
-        </div>
-
         <div class="col-12">
-          <b>คำตอบ:</b>
-        </div>
-        <div class="col-12">
-          <!-- table -->
+          <p-table [value]="[{}]" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            currentPageReportTemplate="แสดง {first} ถึง {last} จาก {totalRecords} รายการ"
+            [rowsPerPageOptions]="[10, 25, 50]">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>X<sub>i</sub></th>
+                <th>ค่า</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-answer let-rowIndex="rowIndex">
+              <tr *ngFor="let item of result_answer.answer;let i = index">
+                <td>X<sub>{{ i }}</sub></td>
+                <td>{{ item }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
       </div>
     </p-card>

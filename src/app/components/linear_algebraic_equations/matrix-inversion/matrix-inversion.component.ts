@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./matrix-inversion.component.scss'],
 })
 export class MatrixInversionComponent {
-  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_form: any = {
@@ -20,8 +19,7 @@ export class MatrixInversionComponent {
     input_array_B: [],
   };
 
-  result_logs: string = '';
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -46,8 +44,71 @@ export class MatrixInversionComponent {
   }
 
   calculate() {
-    console.log(this.calc_form.input_array_Ax);
-    console.log(this.calc_form.input_array_B);
+    this.isLoad_calc = true;
+    let matrixA = this.calc_form.input_array_Ax.map((row: any) => {
+      return row.cols.map((col: any) => {
+        return col.value;
+      });
+    });
+    let matrixB = this.calc_form.input_array_B.map((row: any) => {
+      return row.value;
+    });
+
+    // Matrix Inversion
+    const n = matrixA.length;
+
+    // Create Augmented Matrix [A|I]
+    let augmentedMatrix = [];
+    for (let i = 0; i < n; i++) {
+      let row = [];
+      for (let j = 0; j < n; j++) {
+        row.push(matrixA[i][j]);
+      }
+      for (let j = 0; j < n; j++) {
+        row.push(i == j ? 1 : 0);
+      }
+      augmentedMatrix.push(row);
+    }
+
+    // Perform row operations
+    // Note ith is row and jth is column
+    for (let i = 0; i < n; i++) {
+      // Use augmentedMatrix[i][i] to divide ith row
+      let divisor = augmentedMatrix[i][i];
+      for (let j = 0; j < 2 * n; j++) {
+        augmentedMatrix[i][j] /= divisor;
+      }
+
+      // Use augmentedMatrix[i][i] to subtract from other rows
+      for (let j = 0; j < n; j++) {
+        if (i != j) {
+          let multiplier = augmentedMatrix[j][i];
+          for (let k = 0; k < 2 * n; k++) {
+            augmentedMatrix[j][k] -= multiplier * augmentedMatrix[i][k];
+          }
+        }
+      }
+    }
+
+    // Get inverse matrix
+    let inverseMatrix = [];
+    for (let i = 0; i < n; i++) {
+      let row = [];
+      for (let j = n; j < 2 * n; j++) {
+        row.push(augmentedMatrix[i][j]);
+      }
+      inverseMatrix.push(row);
+    }
+
+    // Get solution
+    let solution = [];
+    for (let i = 0; i < n; i++) {
+      solution.push(inverseMatrix[i][0]);
+    }
+
+    // Display answer
+    this.result_answer.answer = solution;
+    this.isLoad_calc = false;
   }
 
   reset() {
@@ -59,13 +120,8 @@ export class MatrixInversionComponent {
     this.calc_form.input_array_B.forEach((row: any) => {
       row.value = null;
     });
-    this.result_logs = '';
     this.result_answer = {
       answer: [],
     };
-  }
-
-  clear_logs() {
-    this.result_logs = '';
   }
 }

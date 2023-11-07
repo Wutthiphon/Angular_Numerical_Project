@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./gauss-seidel-iteration.component.scss'],
 })
 export class GaussSeidelIterationComponent {
-  debug_mode: boolean = false;
   isLoad_calc: boolean = false;
 
   calc_form: any = {
@@ -23,7 +22,6 @@ export class GaussSeidelIterationComponent {
     input_array_B: [],
   };
 
-  result_logs: string = '';
   result_answer = {
     answer: [],
   };
@@ -49,8 +47,15 @@ export class GaussSeidelIterationComponent {
   }
 
   calculate() {
-    console.log(this.calc_form.input_array_Ax);
-    console.log(this.calc_form.input_array_B);
+    this.isLoad_calc = true;
+    let matrixA = this.calc_form.input_array_Ax.map((row: any) => {
+      return row.cols.map((col: any) => {
+        return col.value;
+      });
+    });
+    let matrixB = this.calc_form.input_array_B.map((row: any) => {
+      return row.value;
+    });
   }
 
   reset() {
@@ -62,16 +67,8 @@ export class GaussSeidelIterationComponent {
     this.calc_form.input_array_B.forEach((row: any) => {
       row.value = null;
     });
-    this.calc_form.range = {
-      initial: { x0: null, x1: null },
-    };
-    this.result_logs = '';
     this.result_answer = {
       answer: [],
     };
-  }
-
-  clear_logs() {
-    this.result_logs = '';
   }
 }

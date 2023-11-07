@@ -16,7 +16,6 @@ import { GaussEliminationComponent } from './components/linear_algebraic_equatio
 import { GaussJordanComponent } from './components/linear_algebraic_equations/gauss-jordan/gauss-jordan.component';
 import { MatrixInversionComponent } from './components/linear_algebraic_equations/matrix-inversion/matrix-inversion.component';
 import { LuDecompositionComponent } from './components/linear_algebraic_equations/lu-decomposition/lu-decomposition.component';
-import { CholeskyDecompositionComponent } from './components/linear_algebraic_equations/cholesky-decomposition/cholesky-decomposition.component';
 import { JacobiIterationComponent } from './components/linear_algebraic_equations/jacobi-iteration/jacobi-iteration.component';
 import { GaussSeidelIterationComponent } from './components/linear_algebraic_equations/gauss-seidel-iteration/gauss-seidel-iteration.component';
 import { ConjugateGradientComponent } from './components/linear_algebraic_equations/conjugate-gradient/conjugate-gradient.component';
@@ -68,10 +67,6 @@ const routes: Routes = [
   {
     path: 'linear_algebraic_equations/lu_decomposition',
     component: LuDecompositionComponent,
-  },
-  {
-    path: 'linear_algebraic_equations/cholesky_decomposition',
-    component: CholeskyDecompositionComponent,
   },
   {
     path: 'linear_algebraic_equations/jacobi_iteration',
