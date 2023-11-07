@@ -28,6 +28,28 @@ export class SecantComponent {
 
   result_logs: string = '';
 
+  chart_options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          family: 'Kanit',
+        },
+      },
+      tooltip: {
+        enabled: true,
+        position: 'nearest',
+        callbacks: {
+          title: (tooltipItems: any, data: any) => {
+            return 'Loop ครั้งที่: ' + tooltipItems[0].label;
+          },
+        },
+      },
+    },
+  };
+  chart1_data: any;
+
   constructor(private messageService: MessageService) {}
 
   readFormula() {
@@ -118,11 +140,85 @@ export class SecantComponent {
   }
 
   calculate() {
-    // Onepoint Iteration
+    this.isLoad_calc = true;
+    this.result_answer.answer = '';
+    this.result_answer.total_loop = 0;
+    this.result_answer.table = Array<any>();
+    const { convert_formula, x0, x1, tolerance, decimal_point } =
+      this.calc_form;
+
+    // Secant
+    let x0_ = x0;
+    let x1_ = x1;
+    let i = 0;
+    while (true) {
+      let fx_0 = this.f_function(x0_, convert_formula);
+      let fx_1 = this.f_function(x1_, convert_formula);
+
+      if (Math.abs(fx_1) < tolerance) {
+        this.result_answer.answer = x1_.toFixed(decimal_point);
+        break;
+      }
+
+      let x2 = x1_ - (fx_1 * (x1_ - x0_)) / (fx_1 - fx_0);
+
+      if (Math.abs(x2 - x1_) < tolerance) {
+        this.result_answer.table.push({
+          loop_count: i + 1,
+          x0: x0_.toFixed(decimal_point),
+          x1: x1_.toFixed(decimal_point),
+          x2: x2.toFixed(decimal_point),
+          fx0: fx_0.toFixed(decimal_point),
+          fx1: fx_1.toFixed(decimal_point),
+          fx2: this.f_function(x2, convert_formula).toFixed(decimal_point),
+        });
+        this.result_answer.answer = x2.toFixed(decimal_point);
+        break;
+      }
+
+      this.result_answer.table.push({
+        loop_count: i + 1,
+        x0: x0_.toFixed(decimal_point),
+        x1: x1_.toFixed(decimal_point),
+        x2: x2.toFixed(decimal_point),
+        fx0: fx_0.toFixed(decimal_point),
+        fx1: fx_1.toFixed(decimal_point),
+        fx2: this.f_function(x2, convert_formula).toFixed(decimal_point),
+      });
+
+      x0_ = x1_;
+      x1_ = x2;
+
+      i++;
+    }
+    this.isLoad_calc = false;
+    this.chart1_data = {
+      labels: this.result_answer.table.map((item: any) => item.loop_count),
+      datasets: [
+        {
+          label: 'x2',
+          data: this.result_answer.table.map((item: any) => item.x2),
+          borderColor: '#42A5F5',
+          fill: false,
+          tension: 0.1,
+        },
+      ],
+    };
   }
 
-  f_function() {
-    // Onepoint Iteration
+  f_function(x: number, convert_formula: string) {
+    // cheak have x in formula
+    if (convert_formula.includes('x')) {
+      if (x < 0) {
+        // replace x to (x)
+        convert_formula = convert_formula.replace(/x/g, `(${x.toString()})`);
+      } else {
+        // replace x to value
+        convert_formula = convert_formula.replace(/x/g, x.toString());
+      }
+    }
+
+    return eval(convert_formula);
   }
 
   clear_logs() {

@@ -16,7 +16,7 @@ export class FalsePositionComponent {
     { label: 'False Position Iteration', value: 'false_position' },
   ];
   calc_form: any = {
-    mode: 'sample_var',
+    mode: 'false_position',
     decimal_point: 6,
     formula: '',
     html_formula: '',
@@ -24,7 +24,7 @@ export class FalsePositionComponent {
     html_formula_replace: '',
     convert_formula_replace: '',
     range: {
-      root: { min: 0.02, max: 0.03 },
+      root: { min: 1.5, max: 2.0 },
     },
     input_array: [],
     sample_var_mode: 'false_position',
@@ -50,16 +50,18 @@ export class FalsePositionComponent {
           family: 'Kanit',
         },
       },
-    },
-    scales: {
-      xAxes: [
-        {
-          gridLines: {
-            zeroLineWidth: 3,
-            zeroLineColor: '#2C292E',
+      tooltip: {
+        enabled: true,
+        position: 'nearest',
+        callbacks: {
+          title: (tooltipItems: any, data: any) => {
+            return 'Loop ครั้งที่: ' + tooltipItems[0].label;
+          },
+          label: (tooltipItems: any, data: any) => {
+            return 'f(x): ' + tooltipItems.dataset.data[tooltipItems.dataIndex];
           },
         },
-      ],
+      },
     },
   };
   chart1_data: any;
@@ -233,62 +235,57 @@ export class FalsePositionComponent {
                 'f(x) = ' + convert_formula_replace + '=0' + '\n';
               this.result_logs += `---------------------------------` + '\n';
 
-              let a: number = range.root.min;
-              let b: number = range.root.max;
+              // False Position
+              let xl: number = range.root.min;
+              let xr: number = range.root.max;
+              // Init Result
+              let xu: number = xl;
 
-              // let i = 0;
-              // while (true) {
-              //   let mid = (a + b) / 2;
+              let i = 0;
+              while (true) {
+                let change = '';
 
-              //   this.result_logs +=
-              //     `Iteration Loop ${i}: mid = ${a.toFixed(
-              //       decimal_point
-              //     )} + ${b.toFixed(decimal_point)} / 2` + '\n';
-              //   this.result_logs +=
-              //     `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
+                let f_xl = this.f_function(xl, convert_formula_replace);
+                let f_xr = this.f_function(xr, convert_formula_replace);
 
-              //   let f_x_test = convert_formula_replace.replace(
-              //     /x/g,
-              //     mid.toFixed(decimal_point).toString()
-              //   );
-              //   this.result_logs +=
-              //     'f(x) = ' +
-              //     Number(eval(f_x_test)).toFixed(decimal_point).toString() +
-              //     '\n';
-              //   this.result_logs += `---------------------------------` + '\n';
+                xu = (xl * f_xr - xr * f_xl) / (f_xr - f_xl);
+                let f_xu = this.f_function(xu, convert_formula_replace);
 
-              //   let change = '';
-              //   if (this.f_function(mid, convert_formula_replace) == 0) {
-              //     this.result_answer.answer = mid.toFixed(decimal_point);
-              //     this.result_answer.false_position_table.push({
-              //       loop_count: ++i,
-              //       xl: a.toFixed(decimal_point),
-              //       xr: b.toFixed(decimal_point),
-              //       xm: mid.toFixed(decimal_point),
-              //       change: '-',
-              //     });
-              //     break;
-              //   } else if (
-              //     this.f_function(a, convert_formula_replace) *
-              //       this.f_function(mid, convert_formula_replace) <
-              //     0
-              //   ) {
-              //     b = mid;
-              //     change = 'R ';
-              //   } else {
-              //     a = mid;
-              //     change = 'L ';
-              //   }
+                this.result_logs +=
+                  `Iteration Loop ${i}: ${xr} - (${xl} * (${xr} - ${xr}) / (${f_xr} - ${f_xl})` +
+                  '\n';
+                this.result_logs +=
+                  `Iteration Result: xu: ${xu.toFixed(
+                    decimal_point
+                  )} f(xu): ${f_xu.toFixed(decimal_point)}` + '\n';
 
-              //   this.result_answer.false_position_table.push({
-              //     loop_count: ++i,
-              //     xl: a.toFixed(decimal_point),
-              //     xr: b.toFixed(decimal_point),
-              //     xm: mid.toFixed(decimal_point),
-              //     change: change,
-              //   });
-              //   this.result_answer.total_loop++;
-              // }
+                if (f_xu == 0) {
+                  this.result_answer.answer = xu.toFixed(decimal_point);
+                  this.result_answer.false_position_table.push({
+                    loop_count: ++i,
+                    xl: xl.toFixed(decimal_point),
+                    xr: xr.toFixed(decimal_point),
+                    xm: xu.toFixed(decimal_point),
+                    change: '-',
+                  });
+                  break;
+                } else if (f_xu * f_xl < 0) {
+                  xr = xu;
+                  change = 'R ';
+                } else {
+                  xl = xu;
+                  change = 'L ';
+                }
+
+                this.result_answer.false_position_table.push({
+                  loop_count: ++i,
+                  xl: xl.toFixed(decimal_point),
+                  xr: xr.toFixed(decimal_point),
+                  xm: xu.toFixed(decimal_point),
+                  change: change,
+                });
+                this.result_answer.total_loop++;
+              }
             }
           }
         }
@@ -304,67 +301,74 @@ export class FalsePositionComponent {
             });
           }
 
+          if (
+            this.f_function(range.root.min, convert_formula) *
+              this.f_function(range.root.max, convert_formula) >=
+            0
+          ) {
+            error++;
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'สมการมากกว่า 0',
+            });
+          }
+
           // if error == 0 do fomula
           if (error == 0) {
             this.result_logs += 'f(x) = ' + convert_formula + '=0' + '\n';
             this.result_logs += `---------------------------------` + '\n';
 
-            let a: number = range.root.min;
-            let b: number = range.root.max;
+            // False Position
+            let xl: number = range.root.min;
+            let xr: number = range.root.max;
+            // Init Result
+            let xu: number = xl;
 
             let i = 0;
             while (true) {
-            //   let mid = (a + b) / 2;
+              let change = '';
 
-            //   this.result_logs +=
-            //     `Iteration Loop ${i}: mid = ${a.toFixed(
-            //       decimal_point
-            //     )} + ${b.toFixed(decimal_point)} / 2` + '\n';
-            //   this.result_logs +=
-            //     `Iteration Result: ${mid.toFixed(decimal_point)}` + '\n';
+              let f_xl = this.f_function(xl, convert_formula);
+              let f_xr = this.f_function(xr, convert_formula);
 
-            //   let f_x_test = convert_formula.replace(
-            //     /x/g,
-            //     mid.toFixed(decimal_point).toString()
-            //   );
-            //   this.result_logs +=
-            //     'f(x) = ' +
-            //     Number(eval(f_x_test)).toFixed(decimal_point).toString() +
-            //     '\n';
-            //   this.result_logs += `---------------------------------` + '\n';
+              xu = (xl * f_xr - xr * f_xl) / (f_xr - f_xl);
+              let f_xu = this.f_function(xu, convert_formula);
 
-            //   let change = '';
+              this.result_logs +=
+                `Iteration Loop ${i}: ${xr} - (${xl} * (${xr} - ${xr}) / (${f_xr} - ${f_xl})` +
+                '\n';
+              this.result_logs +=
+                `Iteration Result: xu: ${xu.toFixed(
+                  decimal_point
+                )} f(xu): ${f_xu.toFixed(decimal_point)}` + '\n';
 
-            //   if (this.f_function(mid, convert_formula) == 0) {
-            //     this.result_answer.answer = mid.toFixed(decimal_point);
-            //     this.result_answer.false_position_table.push({
-            //       loop_count: ++i,
-            //       xl: a.toFixed(decimal_point),
-            //       xr: b.toFixed(decimal_point),
-            //       xm: mid.toFixed(decimal_point),
-            //       change: '-',
-            //     });
-            //     break;
-            //   } else if (
-            //     this.f_function(a, convert_formula) *
-            //       this.f_function(mid, convert_formula) <
-            //     0
-            //   ) {
-            //     b = mid;
-            //     change = 'R ';
-            //   } else {
-            //     a = mid;
-            //     change = 'L ';
-            //   }
+              if (f_xu == 0) {
+                this.result_answer.answer = xu.toFixed(decimal_point);
+                this.result_answer.false_position_table.push({
+                  loop_count: ++i,
+                  xl: xl.toFixed(decimal_point),
+                  xr: xr.toFixed(decimal_point),
+                  xm: xu.toFixed(decimal_point),
+                  change: '-',
+                });
+                break;
+              } else if (f_xu * f_xl < 0) {
+                xr = xu;
+                change = 'R ';
+              } else {
+                xl = xu;
+                change = 'L ';
+              }
 
-            //   this.result_answer.false_position_table.push({
-            //     loop_count: ++i,
-            //     xl: a.toFixed(decimal_point),
-            //     xr: b.toFixed(decimal_point),
-            //     xm: mid.toFixed(decimal_point),
-            //     change: change,
-            //   });
-            //   this.result_answer.total_loop++;
+              this.result_answer.false_position_table.push({
+                loop_count: ++i,
+                xl: xl.toFixed(decimal_point),
+                xr: xr.toFixed(decimal_point),
+                xm: xu.toFixed(decimal_point),
+                change: change,
+              });
+              this.result_answer.total_loop++;
             }
           }
         }
@@ -411,7 +415,11 @@ export class FalsePositionComponent {
 
   f_function(x: number, convert_formula: any) {
     const { mode } = this.calc_form;
-    return eval(convert_formula) - x;
+    if (mode == 'sample_var') {
+      return eval(convert_formula) - x;
+    } else if (mode == 'false_position') {
+      return eval(convert_formula.replace(/x/g, x.toString()));
+    }
   }
 
   clear_logs() {

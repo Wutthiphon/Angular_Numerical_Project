@@ -27,6 +27,31 @@ export class OnePointIterationComponent {
 
   result_logs: string = '';
 
+  chart_options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          family: 'Kanit',
+        },
+      },
+      tooltip: {
+        enabled: true,
+        position: 'nearest',
+        callbacks: {
+          title: (tooltipItems: any, data: any) => {
+            return 'Loop ครั้งที่: ' + tooltipItems[0].label;
+          },
+          label: (tooltipItems: any, data: any) => {
+            return 'f(x): ' + tooltipItems.dataset.data[tooltipItems.dataIndex];
+          },
+        },
+      },
+    },
+  };
+  chart1_data: any;
+
   constructor(private messageService: MessageService) {}
 
   readFormula() {
@@ -117,11 +142,64 @@ export class OnePointIterationComponent {
   }
 
   calculate() {
+    this.isLoad_calc = true;
+    this.result_answer.answer = '';
+    this.result_answer.total_loop = 0;
+    this.result_answer.table = Array<any>();
+    const { decimal_point, tolerance, convert_formula, start } = this.calc_form;
     // Onepoint Iteration
+    let x = start;
+    while (true) {
+      let xNext = this.f_function(x, convert_formula);
+      this.result_logs += `Loop ${
+        this.result_answer.total_loop
+      } : x = ${xNext.toFixed(decimal_point)}\n`;
+      if (Math.abs(xNext - x) < tolerance) {
+        this.result_answer.answer = xNext.toFixed(decimal_point);
+        this.result_logs += `Ans: ${xNext.toFixed(decimal_point)}\n`;
+        this.result_answer.table.push({
+          loop_count: this.result_answer.total_loop + 1,
+          x: x.toFixed(decimal_point),
+          y: xNext.toFixed(decimal_point),
+        });
+        break;
+      }
+      this.result_answer.table.push({
+        loop_count: this.result_answer.total_loop + 1,
+        x: x.toFixed(decimal_point),
+        y: xNext.toFixed(decimal_point),
+      });
+      this.result_answer.total_loop++;
+      x = xNext;
+    }
+
+    this.chart1_data = {
+      labels: this.result_answer.table.map((item: any) => item.loop_count),
+      datasets: [
+        {
+          label: 'Y',
+          data: this.result_answer.table.map((item: any) => item.y),
+          borderColor: '#42A5F5',
+          fill: false,
+          tension: 0.1,
+        },
+      ],
+    };
+    this.isLoad_calc = false;
   }
 
-  f_function() {
-    // Onepoint Iteration
+  f_function(x: number, formula: string) {
+    // check formula have x or not
+    if (formula.includes('x')) {
+      if (x < 0) {
+        // replace x to (x)
+        formula = formula.replace(/x/g, `(${x.toString()})`);
+      } else {
+        // replace x to value
+        formula = formula.replace(/x/g, x.toString());
+      }
+    }
+    return eval(formula);
   }
 
   clear_logs() {

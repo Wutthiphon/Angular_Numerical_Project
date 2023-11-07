@@ -96,21 +96,17 @@
             [rowsPerPageOptions]="[10, 25, 50]">
             <ng-template pTemplate="header">
               <tr>
-                <!-- <th>ครั้งที่</th>
-                <th>X<sub>l</sub></th>
-                <th>X<sub>r</sub></th>
-                <th>X<sub>m</sub></th>
-                <th>ปรับ</th> -->
+                <th>ครั้งที่</th>
+                <th>X (Start)</th>
+                <th>F(x)</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-result>
-              <!-- <tr>
+              <tr>
                 <td>{{ result.loop_count }}</td>
-                <td>{{ result.xl }}</td>
-                <td>{{ result.xr }}</td>
-                <td>{{ result.xm }}</td>
-                <td>{{ result.change }}</td>
-              </tr> -->
+                <td>{{ result.x }}</td>
+                <td>{{ result.y }}</td>
+              </tr>
             </ng-template>
           </p-table>
         </div>
@@ -121,9 +117,7 @@
     <p-card header="กราฟ">
       <div class="grid">
         <div class="col-12" align="center">
-          <!-- <h4>ช่วงของ X Loop ครั้งที่ 1 ({{ calc_form.range.root.min.toFixed(calc_form.decimal_point) }} - {{
-            calc_form.range.root.max.toFixed(calc_form.decimal_point) }})</h4> -->
-          <!-- <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart> -->
+          <p-chart type="line" [data]="chart1_data" [options]="chart_options"></p-chart>
         </div>
       </div>
     </p-card>

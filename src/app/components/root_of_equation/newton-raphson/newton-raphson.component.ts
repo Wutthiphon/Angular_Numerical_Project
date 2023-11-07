@@ -27,6 +27,28 @@ export class NewtonRaphsonComponent {
 
   result_logs: string = '';
 
+  chart_options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          family: 'Kanit',
+        },
+      },
+      tooltip: {
+        enabled: true,
+        position: 'nearest',
+        callbacks: {
+          title: (tooltipItems: any, data: any) => {
+            return 'Loop ครั้งที่: ' + tooltipItems[0].label;
+          },
+        },
+      },
+    },
+  };
+  chart1_data: any;
+
   constructor(private messageService: MessageService) {}
 
   readFormula() {
@@ -117,11 +139,87 @@ export class NewtonRaphsonComponent {
   }
 
   calculate() {
-    // Onepoint Iteration
+    this.isLoad_calc = true;
+    this.result_answer.answer = '';
+    this.result_answer.total_loop = 0;
+    this.result_answer.table = Array<any>();
+    const { decimal_point, tolerance, convert_formula, start } = this.calc_form;
+    // Newton-Raphson
+    let x0: number = start;
+    let x1: number =
+      x0 -
+      this.f_function(x0, convert_formula) /
+        this.df_function(x0, convert_formula);
+
+    let i = 0;
+    while (Math.abs(x1 - x0) > tolerance) {
+      x0 = x1;
+      x1 =
+        x0 -
+        this.f_function(x0, convert_formula) /
+          this.df_function(x0, convert_formula);
+
+      i++;
+      // Add To Logs
+      this.result_logs += `Iteration ${i} : ${x1.toFixed(decimal_point)}\n`;
+      this.result_logs += `x0: ${x0} x1: ${x1}\n`;
+      this.result_logs += `-----------------------------------------------\n`;
+      // Add To Table
+      this.result_answer.table.push({
+        loop_count: i,
+        x0: x0.toFixed(decimal_point),
+        x1: x1.toFixed(decimal_point),
+        error: Math.abs(x1 - x0).toFixed(decimal_point),
+      });
+    }
+
+    this.result_answer.total_loop = i;
+    this.result_answer.answer = x1.toFixed(decimal_point);
+
+    this.chart1_data = {
+      labels: this.result_answer.table.map((item: any) => item.loop_count),
+      datasets: [
+        {
+          label: 'x0',
+          data: this.result_answer.table.map((item: any) => item.x0),
+          borderColor: '#42A5F5',
+          fill: false,
+          tension: 0.1,
+        },
+        {
+          label: 'x1',
+          data: this.result_answer.table.map((item: any) => item.x1),
+          borderColor: '#ff8282',
+          fill: false,
+          tension: 0.1,
+        },
+      ],
+    };
+    this.isLoad_calc = false;
   }
 
-  f_function() {
-    // Onepoint Iteration
+  f_function(x: number, convert_formula: string) {
+    // cheak have x in formula
+    if (convert_formula.includes('x')) {
+      if (x < 0) {
+        // replace x to (x)
+        convert_formula = convert_formula.replace(/x/g, `(${x.toString()})`);
+      } else {
+        // replace x to value
+        convert_formula = convert_formula.replace(/x/g, x.toString());
+      }
+    }
+    return eval(convert_formula);
+  }
+
+  df_function(x: number, convert_formula: string) {
+    // Derivative
+    let h = 0.00001;
+    let df =
+      (this.f_function(x + h, convert_formula) -
+        this.f_function(x, convert_formula)) /
+      h;
+    return df;
   }
 
   clear_logs() {

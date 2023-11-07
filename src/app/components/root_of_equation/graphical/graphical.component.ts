@@ -14,7 +14,7 @@ export class GraphicalComponent {
 
   calc_form: any = {
     decimal_point: 6,
-    formula: '43x-180=',
+    formula: '',
     html_formula: '',
     convert_formula: '',
     range: {

@@ -51,16 +51,18 @@ export class BisectionComponent {
           family: 'Kanit',
         },
       },
-    },
-    scales: {
-      xAxes: [
-        {
-          gridLines: {
-            zeroLineWidth: 3,
-            zeroLineColor: '#2C292E',
+      tooltip: {
+        enabled: true,
+        position: 'nearest',
+        callbacks: {
+          title: (tooltipItems: any, data: any) => {
+            return 'Loop ครั้งที่: ' + tooltipItems[0].label;
+          },
+          label: (tooltipItems: any, data: any) => {
+            return 'f(x): ' + tooltipItems.dataset.data[tooltipItems.dataIndex];
           },
         },
-      ],
+      },
     },
   };
   chart1_data: any;
@@ -474,7 +476,6 @@ export class BisectionComponent {
   }
 
   f_function(x: number, convert_formula: any) {
-    const { mode } = this.calc_form;
     return eval(convert_formula) - x;
   }
 
