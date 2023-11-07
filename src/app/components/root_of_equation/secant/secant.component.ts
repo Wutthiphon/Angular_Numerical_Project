@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-secant',
@@ -50,7 +51,10 @@ export class SecantComponent {
   };
   chart1_data: any;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private apiService: ApiService
+  ) {}
 
   readFormula() {
     let html_formula = '';
@@ -147,63 +151,123 @@ export class SecantComponent {
     const { convert_formula, x0, x1, tolerance, decimal_point } =
       this.calc_form;
 
-    // Secant
-    let x0_ = x0;
-    let x1_ = x1;
-    let i = 0;
-    while (true) {
-      let fx_0 = this.f_function(x0_, convert_formula);
-      let fx_1 = this.f_function(x1_, convert_formula);
+    this.apiService
+      .findFormula(
+        convert_formula,
+        { x0: x0, x1: x1, tolerance: tolerance },
+        'secant'
+      )
+      .subscribe((res: any) => {
+        if (res.status == true) {
+          // If Found Previous Calculate
+          this.result_logs += 'Found Previous Calculate In Database\n';
+          this.result_answer.answer = Number(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'answer';
+            })?.value
+          ).toFixed(decimal_point);
+          this.result_answer.total_loop =
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'loop_count';
+            })?.value;
+          this.result_answer.table = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'table';
+            })?.value
+          );
+          this.chart1_data = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'chart1';
+            })?.value
+          );
+          this.isLoad_calc = false;
+        } else {
+          // Secant
+          let x0_ = x0;
+          let x1_ = x1;
+          let i = 0;
+          while (true) {
+            let fx_0 = this.f_function(x0_, convert_formula);
+            let fx_1 = this.f_function(x1_, convert_formula);
 
-      if (Math.abs(fx_1) < tolerance) {
-        this.result_answer.answer = x1_.toFixed(decimal_point);
-        break;
-      }
+            if (Math.abs(fx_1) < tolerance) {
+              this.result_answer.answer = x1_.toFixed(decimal_point);
+              break;
+            }
 
-      let x2 = x1_ - (fx_1 * (x1_ - x0_)) / (fx_1 - fx_0);
+            let x2 = x1_ - (fx_1 * (x1_ - x0_)) / (fx_1 - fx_0);
 
-      if (Math.abs(x2 - x1_) < tolerance) {
-        this.result_answer.table.push({
-          loop_count: i + 1,
-          x0: x0_.toFixed(decimal_point),
-          x1: x1_.toFixed(decimal_point),
-          x2: x2.toFixed(decimal_point),
-          fx0: fx_0.toFixed(decimal_point),
-          fx1: fx_1.toFixed(decimal_point),
-          fx2: this.f_function(x2, convert_formula).toFixed(decimal_point),
-        });
-        this.result_answer.answer = x2.toFixed(decimal_point);
-        break;
-      }
+            if (Math.abs(x2 - x1_) < tolerance) {
+              this.result_answer.table.push({
+                loop_count: i + 1,
+                x0: x0_.toFixed(decimal_point),
+                x1: x1_.toFixed(decimal_point),
+                x2: x2.toFixed(decimal_point),
+                fx0: fx_0.toFixed(decimal_point),
+                fx1: fx_1.toFixed(decimal_point),
+                fx2: this.f_function(x2, convert_formula).toFixed(
+                  decimal_point
+                ),
+              });
+              this.result_answer.answer = x2.toFixed(decimal_point);
+              break;
+            }
 
-      this.result_answer.table.push({
-        loop_count: i + 1,
-        x0: x0_.toFixed(decimal_point),
-        x1: x1_.toFixed(decimal_point),
-        x2: x2.toFixed(decimal_point),
-        fx0: fx_0.toFixed(decimal_point),
-        fx1: fx_1.toFixed(decimal_point),
-        fx2: this.f_function(x2, convert_formula).toFixed(decimal_point),
+            this.result_answer.table.push({
+              loop_count: i + 1,
+              x0: x0_.toFixed(decimal_point),
+              x1: x1_.toFixed(decimal_point),
+              x2: x2.toFixed(decimal_point),
+              fx0: fx_0.toFixed(decimal_point),
+              fx1: fx_1.toFixed(decimal_point),
+              fx2: this.f_function(x2, convert_formula).toFixed(decimal_point),
+            });
+
+            x0_ = x1_;
+            x1_ = x2;
+
+            i++;
+          }
+          this.chart1_data = {
+            labels: this.result_answer.table.map(
+              (item: any) => item.loop_count
+            ),
+            datasets: [
+              {
+                label: 'x2',
+                data: this.result_answer.table.map((item: any) => item.x2),
+                borderColor: '#42A5F5',
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          };
+
+          // Save To Database
+          this.apiService
+            .saveFormula(
+              convert_formula,
+              { x0: x0, x1: x1, tolerance: tolerance },
+              'secant',
+              {
+                answer: x1,
+                loop_count: this.result_answer.total_loop,
+                table: this.result_answer.table,
+                chart1: this.chart1_data,
+              }
+            )
+            .subscribe((res: any) => {
+              if (res.status == true) {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: 'บันทึกการคำนวนสำเร็จ',
+                });
+              }
+            });
+          this.isLoad_calc = false;
+        }
       });
-
-      x0_ = x1_;
-      x1_ = x2;
-
-      i++;
-    }
-    this.isLoad_calc = false;
-    this.chart1_data = {
-      labels: this.result_answer.table.map((item: any) => item.loop_count),
-      datasets: [
-        {
-          label: 'x2',
-          data: this.result_answer.table.map((item: any) => item.x2),
-          borderColor: '#42A5F5',
-          fill: false,
-          tension: 0.1,
-        },
-      ],
-    };
   }
 
   f_function(x: number, convert_formula: string) {

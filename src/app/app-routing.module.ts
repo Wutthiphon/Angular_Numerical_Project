@@ -25,7 +25,6 @@ import { LagrangeComponent } from './components/interpolation_and_extrapolation/
 import { SplineComponent } from './components/interpolation_and_extrapolation/spline/spline.component';
 // Least Squares Regression
 import { LinearComponent } from './components/least_squares_regression/linear/linear.component';
-import { PolynomialComponent } from './components/least_squares_regression/polynomial/polynomial.component';
 import { MultipleLinearComponent } from './components/least_squares_regression/multiple-linear/multiple-linear.component';
 // Integration & Differentiation
 import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
@@ -95,10 +94,6 @@ const routes: Routes = [
   },
   // Least Squares Regression
   { path: 'least_squares_regression/linear', component: LinearComponent },
-  {
-    path: 'least_squares_regression/polynomial',
-    component: PolynomialComponent,
-  },
   {
     path: 'least_squares_regression/multiple_linear',
     component: MultipleLinearComponent,

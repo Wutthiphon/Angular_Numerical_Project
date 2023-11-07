@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-newton-raphson',
@@ -49,7 +50,10 @@ export class NewtonRaphsonComponent {
   };
   chart1_data: any;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private apiService: ApiService
+  ) {}
 
   readFormula() {
     let html_formula = '';
@@ -144,58 +148,110 @@ export class NewtonRaphsonComponent {
     this.result_answer.total_loop = 0;
     this.result_answer.table = Array<any>();
     const { decimal_point, tolerance, convert_formula, start } = this.calc_form;
-    // Newton-Raphson
-    let x0: number = start;
-    let x1: number =
-      x0 -
-      this.f_function(x0, convert_formula) /
-        this.df_function(x0, convert_formula);
 
-    let i = 0;
-    while (Math.abs(x1 - x0) > tolerance) {
-      x0 = x1;
-      x1 =
-        x0 -
-        this.f_function(x0, convert_formula) /
-          this.df_function(x0, convert_formula);
+    this.apiService
+      .findFormula(convert_formula, { start: start }, 'newton-raphson')
+      .subscribe((res: any) => {
+        if (res.status == true) {
+          // If Found Previous Calculate
+          this.result_logs += 'Found Previous Calculate In Database\n';
+          this.result_answer.answer = Number(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'answer';
+            })?.value
+          ).toFixed(decimal_point);
+          this.result_answer.total_loop =
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'loop_count';
+            })?.value;
+          this.result_answer.table = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'table';
+            })?.value
+          );
+          this.chart1_data = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'chart1';
+            })?.value
+          );
+          this.isLoad_calc = false;
+        } else {
+          // Newton-Raphson
+          let x0: number = start;
+          let x1: number =
+            x0 -
+            this.f_function(x0, convert_formula) /
+              this.df_function(x0, convert_formula);
 
-      i++;
-      // Add To Logs
-      this.result_logs += `Iteration ${i} : ${x1.toFixed(decimal_point)}\n`;
-      this.result_logs += `x0: ${x0} x1: ${x1}\n`;
-      this.result_logs += `-----------------------------------------------\n`;
-      // Add To Table
-      this.result_answer.table.push({
-        loop_count: i,
-        x0: x0.toFixed(decimal_point),
-        x1: x1.toFixed(decimal_point),
-        error: Math.abs(x1 - x0).toFixed(decimal_point),
+          let i = 0;
+          while (Math.abs(x1 - x0) > tolerance) {
+            x0 = x1;
+            x1 =
+              x0 -
+              this.f_function(x0, convert_formula) /
+                this.df_function(x0, convert_formula);
+
+            i++;
+            // Add To Logs
+            this.result_logs += `Iteration ${i} : ${x1.toFixed(
+              decimal_point
+            )}\n`;
+            this.result_logs += `x0: ${x0} x1: ${x1}\n`;
+            this.result_logs += `-----------------------------------------------\n`;
+            // Add To Table
+            this.result_answer.table.push({
+              loop_count: i,
+              x0: x0.toFixed(decimal_point),
+              x1: x1.toFixed(decimal_point),
+              error: Math.abs(x1 - x0).toFixed(decimal_point),
+            });
+          }
+
+          this.result_answer.total_loop = i;
+          this.result_answer.answer = x1.toFixed(decimal_point);
+
+          this.chart1_data = {
+            labels: this.result_answer.table.map(
+              (item: any) => item.loop_count
+            ),
+            datasets: [
+              {
+                label: 'x0',
+                data: this.result_answer.table.map((item: any) => item.x0),
+                borderColor: '#42A5F5',
+                fill: false,
+                tension: 0.1,
+              },
+              {
+                label: 'x1',
+                data: this.result_answer.table.map((item: any) => item.x1),
+                borderColor: '#ff8282',
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          };
+
+          // Save To Database
+          this.apiService
+            .saveFormula(convert_formula, { start: start }, 'newton-raphson', {
+              answer: x1,
+              loop_count: this.result_answer.total_loop,
+              table: this.result_answer.table,
+              chart1: this.chart1_data,
+            })
+            .subscribe((res: any) => {
+              if (res.status == true) {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: 'บันทึกการคำนวนสำเร็จ',
+                });
+              }
+            });
+          this.isLoad_calc = false;
+        }
       });
-    }
-
-    this.result_answer.total_loop = i;
-    this.result_answer.answer = x1.toFixed(decimal_point);
-
-    this.chart1_data = {
-      labels: this.result_answer.table.map((item: any) => item.loop_count),
-      datasets: [
-        {
-          label: 'x0',
-          data: this.result_answer.table.map((item: any) => item.x0),
-          borderColor: '#42A5F5',
-          fill: false,
-          tension: 0.1,
-        },
-        {
-          label: 'x1',
-          data: this.result_answer.table.map((item: any) => item.x1),
-          borderColor: '#ff8282',
-          fill: false,
-          tension: 0.1,
-        },
-      ],
-    };
-    this.isLoad_calc = false;
   }
 
   f_function(x: number, convert_formula: string) {

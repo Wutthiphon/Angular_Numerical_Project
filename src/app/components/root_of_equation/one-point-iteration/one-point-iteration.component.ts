@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-one-point-iteration',
@@ -52,7 +53,10 @@ export class OnePointIterationComponent {
   };
   chart1_data: any;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private apiService: ApiService
+  ) {}
 
   readFormula() {
     let html_formula = '';
@@ -147,45 +151,98 @@ export class OnePointIterationComponent {
     this.result_answer.total_loop = 0;
     this.result_answer.table = Array<any>();
     const { decimal_point, tolerance, convert_formula, start } = this.calc_form;
-    // Onepoint Iteration
-    let x = start;
-    while (true) {
-      let xNext = this.f_function(x, convert_formula);
-      this.result_logs += `Loop ${
-        this.result_answer.total_loop
-      } : x = ${xNext.toFixed(decimal_point)}\n`;
-      if (Math.abs(xNext - x) < tolerance) {
-        this.result_answer.answer = xNext.toFixed(decimal_point);
-        this.result_logs += `Ans: ${xNext.toFixed(decimal_point)}\n`;
-        this.result_answer.table.push({
-          loop_count: this.result_answer.total_loop + 1,
-          x: x.toFixed(decimal_point),
-          y: xNext.toFixed(decimal_point),
-        });
-        break;
-      }
-      this.result_answer.table.push({
-        loop_count: this.result_answer.total_loop + 1,
-        x: x.toFixed(decimal_point),
-        y: xNext.toFixed(decimal_point),
-      });
-      this.result_answer.total_loop++;
-      x = xNext;
-    }
 
-    this.chart1_data = {
-      labels: this.result_answer.table.map((item: any) => item.loop_count),
-      datasets: [
-        {
-          label: 'Y',
-          data: this.result_answer.table.map((item: any) => item.y),
-          borderColor: '#42A5F5',
-          fill: false,
-          tension: 0.1,
-        },
-      ],
-    };
-    this.isLoad_calc = false;
+    this.apiService
+      .findFormula(convert_formula, { start: start }, 'onepoint')
+      .subscribe((res: any) => {
+        if (res.status == true) {
+          // If Found Previous Calculate
+          this.result_logs += 'Found Previous Calculate In Database\n';
+          this.result_answer.answer = Number(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'answer';
+            })?.value
+          ).toFixed(decimal_point);
+          this.result_answer.total_loop =
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'loop_count';
+            })?.value;
+          this.result_answer.table = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'table';
+            })?.value
+          );
+          this.chart1_data = JSON.parse(
+            res.find_previous_formula.formula_result.find((type: any) => {
+              return type.result_type == 'chart1';
+            })?.value
+          );
+          this.isLoad_calc = false;
+        } else {
+          // Onepoint Iteration
+          let result = 0;
+          let x = start;
+          while (true) {
+            let xNext = this.f_function(x, convert_formula);
+            this.result_logs += `Loop ${
+              this.result_answer.total_loop
+            } : x = ${xNext.toFixed(decimal_point)}\n`;
+            if (Math.abs(xNext - x) < tolerance) {
+              this.result_answer.answer = xNext.toFixed(decimal_point);
+              result = xNext;
+              this.result_logs += `Ans: ${xNext.toFixed(decimal_point)}\n`;
+              this.result_answer.table.push({
+                loop_count: this.result_answer.total_loop + 1,
+                x: x.toFixed(decimal_point),
+                y: xNext.toFixed(decimal_point),
+              });
+
+              break;
+            }
+            this.result_answer.table.push({
+              loop_count: this.result_answer.total_loop + 1,
+              x: x.toFixed(decimal_point),
+              y: xNext.toFixed(decimal_point),
+            });
+            this.result_answer.total_loop++;
+            x = xNext;
+          }
+
+          this.chart1_data = {
+            labels: this.result_answer.table.map(
+              (item: any) => item.loop_count
+            ),
+            datasets: [
+              {
+                label: 'Y',
+                data: this.result_answer.table.map((item: any) => item.y),
+                borderColor: '#42A5F5',
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          };
+
+          // Save To Database
+          this.apiService
+            .saveFormula(convert_formula, { start: start }, 'onepoint', {
+              answer: result,
+              loop_count: this.result_answer.total_loop,
+              table: this.result_answer.table,
+              chart1: this.chart1_data,
+            })
+            .subscribe((res: any) => {
+              if (res.status == true) {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: 'บันทึกการคำนวนสำเร็จ',
+                });
+              }
+            });
+          this.isLoad_calc = false;
+        }
+      });
   }
 
   f_function(x: number, formula: string) {

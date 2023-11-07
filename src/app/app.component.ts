@@ -103,10 +103,6 @@ export class AppComponent implements OnInit {
           routerLink: '/least_squares_regression/linear',
         },
         {
-          label: 'Polynomial',
-          routerLink: '/least_squares_regression/polynomial',
-        },
-        {
           label: 'Multiple Linear',
           routerLink: '/least_squares_regression/multiple_linear',
         },

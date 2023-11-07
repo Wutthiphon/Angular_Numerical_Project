@@ -94,7 +94,6 @@ import { LagrangeComponent } from './components/interpolation_and_extrapolation/
 import { SplineComponent } from './components/interpolation_and_extrapolation/spline/spline.component';
 // Least Squares Regression
 import { LinearComponent } from './components/least_squares_regression/linear/linear.component';
-import { PolynomialComponent } from './components/least_squares_regression/polynomial/polynomial.component';
 import { MultipleLinearComponent } from './components/least_squares_regression/multiple-linear/multiple-linear.component';
 // Integration & Differentiation
 import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
@@ -126,7 +125,6 @@ import { DiffComponent } from './components/integration_and_diff/diff/diff.compo
     SplineComponent,
     // Least Squares Regression
     LinearComponent,
-    PolynomialComponent,
     MultipleLinearComponent,
     // Integration & Differentiation
     TrapezoidalComponent,

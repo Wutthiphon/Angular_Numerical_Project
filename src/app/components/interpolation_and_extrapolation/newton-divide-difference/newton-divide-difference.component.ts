@@ -9,19 +9,8 @@ import { MessageService } from 'primeng/api';
 export class NewtonDivideDifferenceComponent {
   isLoad_calc: boolean = false;
 
-  calc_mode = [
-    { label: 'Linear', value: 'linear' },
-    { label: 'Quadratic', value: 'quadratic' },
-    { label: 'Polynomial', value: 'polynomial' },
-  ];
   calc_form: any = {
-    dataset: [
-      { isSelect: false, x: 1, y: 3 },
-      { isSelect: false, x: 3, y: 5 },
-      { isSelect: false, x: 5, y: 7 },
-      { isSelect: false, x: 7, y: 5 },
-      { isSelect: false, x: 11, y: 9 },
-    ], // {x: , y:}
+    dataset: [], // {x: , y:}
     decimal_point: 6,
     target: null,
     point_1: null,
@@ -73,23 +62,34 @@ export class NewtonDivideDifferenceComponent {
 
     this.isLoad_calc = true;
 
-    // Calculate Newton Divide Difference Method (Linear)
+    // Calculate Newton Divide Difference Method
     if (this.calc_form.target != null) {
-      let x: number = this.calc_form.target;
-      let y: number = 0;
+      const x = this.calc_form.dataset.map((item: any) => item.x);
+      const y = this.calc_form.dataset.map((item: any) => item.y);
 
-      for (let i = 0; i < select_data.length; i++) {
-        let temp: number = 1;
-        for (let j = 0; j < select_data.length; j++) {
-          if (i != j) {
-            temp *=
-              (x - select_data[j].x) / (select_data[i].x - select_data[j].x);
-          }
-        }
-        y += temp * select_data[i].y;
+      let n = x.length;
+      const table = new Array(n);
+
+      for (let i = 0; i < n; i++) {
+        table[i] = new Array(n).fill(0);
+        table[i][0] = y[i];
       }
 
-      this.calc_form.answer = y.toFixed(decimal_point);
+      for (let j = 1; j < n; j++) {
+        for (let i = 0; i < n - j; i++) {
+          table[i][j] =
+            (table[i + 1][j - 1] - table[i][j - 1]) / (x[i + j] - x[i]);
+        }
+      }
+
+      let answer = table[0][0];
+      let temp = 1;
+      for (let i = 1; i < n; i++) {
+        temp *= target - x[i - 1];
+        answer += table[0][i] * temp;
+      }
+
+      this.calc_form.answer = answer.toFixed(decimal_point);
     }
 
     this.isLoad_calc = false;
