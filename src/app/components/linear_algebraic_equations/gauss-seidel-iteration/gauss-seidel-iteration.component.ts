@@ -22,7 +22,7 @@ export class GaussSeidelIterationComponent {
     input_array_B: [],
   };
 
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -44,6 +44,11 @@ export class GaussSeidelIterationComponent {
     for (let i = 0; i < rows; i++) {
       this.calc_form.input_array_B.push({ value: null });
     }
+    // update calc_form.input_array_Init
+    this.calc_form.input_array_Init = [];
+    for (let i = 0; i < rows; i++) {
+      this.calc_form.input_array_Init.push({ value: null });
+    }
   }
 
   calculate() {
@@ -56,6 +61,44 @@ export class GaussSeidelIterationComponent {
     let matrixB = this.calc_form.input_array_B.map((row: any) => {
       return row.value;
     });
+    let initialValue = this.calc_form.input_array_Init.map((row: any) => {
+      return row.value;
+    });
+
+    // Gauss Seidel Iteration
+    const n = matrixA.length;
+    const x = initialValue.slice();
+    const tolerance = 0.00001;
+    let iteration = 0;
+
+    while (true) {
+      let max_diff = 0;
+
+      for (let i = 0; i < n; i++) {
+        let sum = 0;
+
+        for (let j = 0; j < n; j++) {
+          if (j !== i) {
+            sum += matrixA[i][j] * x[j];
+          }
+        }
+
+        const newX = (matrixB[i] - sum) / matrixA[i][i];
+        max_diff = Math.max(max_diff, Math.abs(x[i] - newX));
+        x[i] = newX;
+      }
+
+      iteration++;
+
+      if (max_diff < tolerance || iteration > 1000) {
+        break;
+      }
+    }
+
+    this.result_answer.answer = x.map((value: any, index: any) => {
+      return value;
+    });
+    this.isLoad_calc = false;
   }
 
   reset() {

@@ -22,7 +22,7 @@ export class ConjugateGradientComponent {
     input_array_B: [],
   };
 
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -44,18 +44,78 @@ export class ConjugateGradientComponent {
     for (let i = 0; i < rows; i++) {
       this.calc_form.input_array_B.push({ value: null });
     }
+    // update calc_form.input_array_Init
+    this.calc_form.input_array_Init = [];
+    for (let i = 0; i < rows; i++) {
+      this.calc_form.input_array_Init.push({ value: null });
+    }
   }
 
   calculate() {
     this.isLoad_calc = true;
     let matrixA = this.calc_form.input_array_Ax.map((row: any) => {
       return row.cols.map((col: any) => {
-        return col.value;
+        return Number(col.value);
       });
     });
     let matrixB = this.calc_form.input_array_B.map((row: any) => {
-      return row.value;
+      return Number(row.value);
     });
+    let initialValue = this.calc_form.input_array_Init.map((row: any) => {
+      return Number(row.value);
+    });
+
+    // Conjugate Gradient
+    const n = matrixB.length;
+    let x = [...initialValue];
+    let r = this.vectorSubtract(matrixB, this.matrixVectorMultiply(matrixA, x));
+    let p = [...r];
+    let rsold = this.vectorDotProduct(r, r);
+
+    for (let i = 0; i < n; i++) {
+      let Ap = this.matrixVectorMultiply(matrixA, p);
+      let alpha = rsold / this.vectorDotProduct(p, Ap);
+      x = this.vectorAdd(x, this.vectorScalarMultiply(p, alpha));
+      r = this.vectorSubtract(r, this.vectorScalarMultiply(Ap, alpha));
+      let rsnew = this.vectorDotProduct(r, r);
+      if (Math.sqrt(rsnew) < 0.00001) {
+        break;
+      }
+      p = this.vectorAdd(r, this.vectorScalarMultiply(p, rsnew / rsold));
+      rsold = rsnew;
+    }
+
+    this.result_answer.answer = x;
+    this.isLoad_calc = false;
+  }
+
+  matrixVectorMultiply(matrix: any, vector: any) {
+    let n = vector.length;
+    let result = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        result[i] += Number(matrix[i][j] * vector[j]);
+      }
+    }
+    return result;
+  }
+
+  vectorAdd(vector1: any, vector2: any) {
+    return vector1.map((a: number, i: number) => a + vector2[i]);
+  }
+
+  vectorSubtract(vector1: any, vector2: any) {
+    return vector1.map((a: number, i: number) => a - vector2[i]);
+  }
+
+  vectorScalarMultiply(vector: any, scalar: number) {
+    return vector.map((a: number) => a * scalar);
+  }
+
+  vectorDotProduct(vector1: any, vector2: any) {
+    return vector1.reduce((total: number, num: number, i: number) => {
+      return total + num * vector2[i];
+    }, 0);
   }
 
   reset() {

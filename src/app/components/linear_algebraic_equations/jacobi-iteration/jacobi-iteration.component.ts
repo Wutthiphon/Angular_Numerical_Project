@@ -20,9 +20,10 @@ export class JacobiIterationComponent {
     },
     input_array_Ax: [],
     input_array_B: [],
+    input_array_Init: [],
   };
 
-  result_answer = {
+  result_answer: any = {
     answer: [],
   };
 
@@ -44,6 +45,11 @@ export class JacobiIterationComponent {
     for (let i = 0; i < rows; i++) {
       this.calc_form.input_array_B.push({ value: null });
     }
+    // update calc_form.input_array_Init
+    this.calc_form.input_array_Init = [];
+    for (let i = 0; i < rows; i++) {
+      this.calc_form.input_array_Init.push({ value: null });
+    }
   }
 
   calculate() {
@@ -56,6 +62,39 @@ export class JacobiIterationComponent {
     let matrixB = this.calc_form.input_array_B.map((row: any) => {
       return row.value;
     });
+    let initialValue = this.calc_form.input_array_Init.map((row: any) => {
+      return row.value;
+    });
+
+    // Jacobi Iteration
+    const n = matrixA.length;
+    let x = initialValue;
+
+    let tempX = [];
+
+    while (true) {
+      for (let i = 0; i < n; i++) {
+        let sum = matrixB[i];
+        for (let j = 0; j < n; j++) {
+          if (i != j) {
+            sum = sum - matrixA[i][j] * x[j];
+          }
+        }
+        tempX[i] = sum / matrixA[i][i];
+      }
+      let error = 0;
+      for (let i = 0; i < n; i++) {
+        error = error + Math.abs((tempX[i] - x[i]) / tempX[i]);
+      }
+      if (error < 0.000001) {
+        break;
+      } else {
+        x = tempX;
+      }
+    }
+
+    this.result_answer.answer = x;
+    this.isLoad_calc = false;
   }
 
   reset() {
