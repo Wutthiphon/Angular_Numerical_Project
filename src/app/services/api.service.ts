@@ -35,6 +35,27 @@ export class ApiService {
     );
   }
 
+  randMatrix(mode: String): Observable<any> {
+    return this.http.post(
+      API + 'random/matrix',
+      {
+        mode: mode,
+      },
+      httpOptions
+    );
+  }
+
+  findMatrix(input_array: any, mode: String): Observable<any> {
+    return this.http.post(
+      API + 'find/matrix',
+      {
+        input_array: input_array,
+        mode: mode,
+      },
+      httpOptions
+    );
+  }
+
   saveFormula(
     formula: string,
     input_array: any,
@@ -45,6 +66,18 @@ export class ApiService {
       API + 'save/formula',
       {
         formula: formula,
+        input_array: input_array,
+        mode: mode,
+        result: result,
+      },
+      httpOptions
+    );
+  }
+
+  saveMatrix(input_array: any, mode: String, result: any): Observable<any> {
+    return this.http.put(
+      API + 'save/matrix',
+      {
         input_array: input_array,
         mode: mode,
         result: result,

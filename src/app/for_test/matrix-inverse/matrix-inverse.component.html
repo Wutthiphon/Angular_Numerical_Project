@@ -1,0 +1,63 @@
+<div class="grid">
+  <div class="col-12">
+    <h1>Find Inverse Matrix</h1>
+  </div>
+
+  <div class="col-12">
+    <p-panel header="Input Matrix">
+      <div class="grid">
+        <div class="col-3">
+          Matrix Size
+          <p-inputNumber [(ngModel)]="matrix_size" styleClass="w-full" mode="decimal" [min]="2" [max]="5"
+            placeholder="Size ... (2-5)" (onInput)="createMatrixInput()">
+          </p-inputNumber>
+        </div>
+
+        <div class="col-12">
+          <div class="flex" *ngFor="let row of this.matrix_input_array;let i = index">
+            <div class="flex-initial flex align-items-center justify-content-center m-2 w-full"
+              *ngFor="let col of row.col;let j = index">
+              <input type="text" pInputText [(ngModel)]="col.value" [placeholder]="'A' + i + j" class="mt-1 mb-1 w-full"
+                name="Acol_input" #Acol_input="ngModel" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" align="right">
+          <p-button label="หา Inverse" icon="pi pi-check" styleClass="p-button-sm p-button-rounded mt-1 ml-1"
+            (onClick)="calculateMatrix()"></p-button>
+          <p-button label="Random" icon="pi pi-box" styleClass="p-button-sm p-button-rounded mt-1 ml-1 p-button-success"
+            (onClick)="randMatrix()"></p-button>
+        </div>
+      </div>
+    </p-panel>
+  </div>
+
+  <div class="col-12" *ngIf="matrix_out_array.length > 0">
+    <p-panel header="Output Matrix">
+      <div class="grid">
+        <div class="col-12">
+          <p-table [value]="[{}]" class="w-full">
+            <ng-template pTemplate="body">
+              <tr *ngFor="let row of matrix_out_array">
+                <td *ngFor="let col of row">{{ toFixed(col,2) }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <div class="col-12">
+          <p-table [value]="[{}]" class="w-full">
+            <ng-template pTemplate="body">
+              <tr *ngFor="let row of matrix_iden_array">
+                <td *ngFor="let col of row">{{ toFixed(col,0) }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-panel>
+  </div>
+</div>
+
+<p-toast></p-toast>

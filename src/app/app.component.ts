@@ -89,10 +89,10 @@ export class AppComponent implements OnInit {
           label: 'Lagrange',
           routerLink: '/interpolation_and_extrapolation/lagrange',
         },
-        {
-          label: 'Spline',
-          routerLink: '/interpolation_and_extrapolation/spline',
-        },
+        // {
+        //   label: 'Spline',
+        //   routerLink: '/interpolation_and_extrapolation/spline',
+        // },
       ],
     },
     {
@@ -102,10 +102,10 @@ export class AppComponent implements OnInit {
           label: 'Linear',
           routerLink: '/least_squares_regression/linear',
         },
-        {
-          label: 'Multiple Linear',
-          routerLink: '/least_squares_regression/multiple_linear',
-        },
+        // {
+        //   label: 'Multiple Linear',
+        //   routerLink: '/least_squares_regression/multiple_linear',
+        // },
       ],
     },
     {

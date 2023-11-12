@@ -30,6 +30,8 @@ import { MultipleLinearComponent } from './components/least_squares_regression/m
 import { TrapezoidalComponent } from './components/integration_and_diff/trapezoidal/trapezoidal.component';
 import { SimpsonComponent } from './components/integration_and_diff/simpson/simpson.component';
 import { DiffComponent } from './components/integration_and_diff/diff/diff.component';
+// For Test
+import { MatrixInverseComponent } from './for_test/matrix-inverse/matrix-inverse.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -94,10 +96,10 @@ const routes: Routes = [
   },
   // Least Squares Regression
   { path: 'least_squares_regression/linear', component: LinearComponent },
-  {
-    path: 'least_squares_regression/multiple_linear',
-    component: MultipleLinearComponent,
-  },
+  // {
+  //   path: 'least_squares_regression/multiple_linear',
+  //   component: MultipleLinearComponent,
+  // },
   // Integration & Differentiation
   {
     path: 'integration_and_diff/trapezoidal',
@@ -105,6 +107,11 @@ const routes: Routes = [
   },
   { path: 'integration_and_diff/simpson', component: SimpsonComponent },
   { path: 'integration_and_diff/diff', component: DiffComponent },
+  // For Test
+  {
+    path: 'matrix_inv',
+    component: MatrixInverseComponent,
+  },
 ];
 
 @NgModule({
